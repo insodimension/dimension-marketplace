@@ -18,7 +18,8 @@
 	},
 	"private": true,
 	"scripts": {
-		"build": "vite build"
+		"build": "vite build",
+		"test": "bun test"
 	},
 	"peerDependencies": {
 		"react": ">=19"
