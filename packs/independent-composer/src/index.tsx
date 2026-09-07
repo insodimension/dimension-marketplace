@@ -65,13 +65,16 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 	const { sessionRef, placeholder, actions, session, disabled, opening, continuation, leftSlot, rightSlot } = props;
 	const draftKey = sessionRef ? `${sessionRef.workspaceId}\0${sessionRef.sessionId}` : "";
 	const [draft, setDraft] = useState(() => drafts.get(draftKey) ?? "");
-	// The key this component is CURRENTLY bound to, readable from an async
-	// restore. A failed send resolves when the turn settles, by which point the
-	// user may have switched sessions — the module `drafts` map is keyed, so the
-	// text always goes back to the right session, but local state must only be
-	// touched while this component is still showing that session.
+	// The key and the text this component is CURRENTLY bound to, readable from an
+	// async acknowledgement. A send resolves when the turn settles, by which point
+	// the user may have switched sessions or typed something newer — the module
+	// `drafts` map is keyed so it is always the right session's copy, but local
+	// state must only be touched while this component still shows that session
+	// AND still holds the exact text that was sent.
 	const liveKeyRef = useRef(draftKey);
 	liveKeyRef.current = draftKey;
+	const draftRef = useRef(draft);
+	draftRef.current = draft;
 	const facts = (useObservable(session ?? NO_SESSION) ?? null) as {
 		readonly isStreaming?: boolean;
 		readonly turnPhase?: "streaming" | "settled";
@@ -132,20 +135,28 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 			value={draft}
 			onChange={setDraftPersisted}
 			onSubmit={(text, attachments) => {
-				// Bind the key BEFORE anything awaits: the restore below must land in
-				// the session that was being composed INTO, never whichever one is on
-				// screen when a late verdict arrives.
-				const restoreKey = draftKey;
-				setDraftPersisted("");
+				// Bind the key BEFORE anything awaits: the acknowledgement below must
+				// act on the session that was being composed INTO, never whichever one
+				// is on screen when a late answer arrives.
+				const sentKey = draftKey;
+				// DO NOT clear the draft here. Until the host acknowledges delivery
+				// this IS the only copy of the user's words, and clear-then-restore
+				// cannot work: with the wire down `sendMessage` never resolves at all,
+				// so there is no verdict to restore on. Measured on a device
+				// (2026-09-07, board mtrghytjnr2mrx) — typed offline, submitted, and
+				// the text was gone in under a second with nothing ever coming back.
+				//
+				// Leaving it costs nothing visually: `Composer.submitValue` clears its
+				// attachment pills itself but deliberately leaves the TEXT to this
+				// controlled `value`, so the words simply stay on screen until they
+				// are known to have left. An unsent message you can still see is the
+				// honest state; an empty field is a lie about where your words went.
 				void (async () => {
-					if (await send(text, attachments)) return;
-					// The host reported the send FAILED, and `setDraftPersisted("")`
-					// above just discarded the only copy of these words. Put them
-					// back — unless the user has already started typing again, whose
-					// newer work outranks this restore.
-					if (!text || !restoreKey || drafts.get(restoreKey)) return;
-					drafts.set(restoreKey, text);
-					if (liveKeyRef.current === restoreKey) setDraft(text);
+					if (!(await send(text, attachments))) return;
+					// Delivered. Now it is safe to drop the copy — and only if the user
+					// has not typed something newer while it was in flight.
+					if (drafts.get(sentKey) === text) drafts.delete(sentKey);
+					if (liveKeyRef.current === sentKey && draftRef.current === text) setDraft("");
 				})();
 			}}
 			onStashSend={(text, attachments) => void send(text, attachments)}

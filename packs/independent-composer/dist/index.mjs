@@ -20,6 +20,8 @@ function IndependentComposer(props) {
 	const [draft, setDraft] = useState(() => drafts.get(draftKey) ?? "");
 	const liveKeyRef = useRef(draftKey);
 	liveKeyRef.current = draftKey;
+	const draftRef = useRef(draft);
+	draftRef.current = draft;
 	const facts = useObservable(session ?? NO_SESSION) ?? null;
 	const slashCommands = useSlashCommands(draft);
 	const fileCompletionSource = useFileCompletions();
@@ -53,13 +55,11 @@ function IndependentComposer(props) {
 		value: draft,
 		onChange: setDraftPersisted,
 		onSubmit: (text, attachments) => {
-			const restoreKey = draftKey;
-			setDraftPersisted("");
+			const sentKey = draftKey;
 			(async () => {
-				if (await send(text, attachments)) return;
-				if (!text || !restoreKey || drafts.get(restoreKey)) return;
-				drafts.set(restoreKey, text);
-				if (liveKeyRef.current === restoreKey) setDraft(text);
+				if (!await send(text, attachments)) return;
+				if (drafts.get(sentKey) === text) drafts.delete(sentKey);
+				if (liveKeyRef.current === sentKey && draftRef.current === text) setDraft("");
 			})();
 		},
 		onStashSend: (text, attachments) => void send(text, attachments),
