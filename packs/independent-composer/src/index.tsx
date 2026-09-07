@@ -26,7 +26,7 @@ import {
 	useSlashCommands,
 	UsageLimitComposerSurface,
 } from "@fraym/ui";
-import { useState, type ReactNode } from "react";
+import { type ReactNode, useRef, useState } from "react";
 
 /** The prop shape this composer uses, declared structurally — a marketplace
  *  author has no path into the host's internal contract modules, and none is
@@ -36,7 +36,7 @@ interface ComposerProps {
 	readonly placeholder: string;
 	readonly actions?:
 		| {
-				readonly sendMessage: (input: unknown) => Promise<void>;
+				readonly sendMessage: (input: unknown) => Promise<boolean | void>;
 				readonly interruptRunForQueuedMessage: () => Promise<void>;
 		  }
 		| null;
@@ -65,6 +65,13 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 	const { sessionRef, placeholder, actions, session, disabled, opening, continuation, leftSlot, rightSlot } = props;
 	const draftKey = sessionRef ? `${sessionRef.workspaceId}\0${sessionRef.sessionId}` : "";
 	const [draft, setDraft] = useState(() => drafts.get(draftKey) ?? "");
+	// The key this component is CURRENTLY bound to, readable from an async
+	// restore. A failed send resolves when the turn settles, by which point the
+	// user may have switched sessions — the module `drafts` map is keyed, so the
+	// text always goes back to the right session, but local state must only be
+	// touched while this component is still showing that session.
+	const liveKeyRef = useRef(draftKey);
+	liveKeyRef.current = draftKey;
 	const facts = (useObservable(session ?? NO_SESSION) ?? null) as {
 		readonly isStreaming?: boolean;
 		readonly turnPhase?: "streaming" | "settled";
@@ -86,11 +93,11 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 	const running = Boolean(facts?.isStreaming) || facts?.turnPhase === "streaming";
 	const goal = (facts?.goal ?? null) as { readonly objective?: string } | null | undefined;
 
-	const send = (
+	const send = async (
 		text: string,
 		attachments: readonly { readonly data: string; readonly mimeType: string; readonly name?: string }[] = [],
-	) => {
-		if (!actions || blocked) return;
+	): Promise<boolean> => {
+		if (!actions || blocked) return false;
 		// NO `running` guard: `actions.sendMessage` is the ONE behavior path and
 		// the HOST resolves queue-vs-send (a send while streaming QUEUES, the
 		// same as the reference — the shipped composer has no streaming guard
@@ -105,7 +112,15 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 		// image behind an "[Image #N]" marker. Map them to the wire shape the
 		// reference's sendComposed produces.
 		const images = attachments.map(a => ({ kind: "image", mimeType: a.mimeType, data: a.data, name: a.name }));
-		void actions.sendMessage(images.length > 0 ? { text, attachments: images } : text);
+		// RETURN the host's delivery verdict. The comment above records this
+		// file's own history of vaporizing composed text; the FAILURE path had
+		// the same hole, because `onSubmit` clears the draft and this call threw
+		// the answer away. Observed on a real device 2026-09-07: typed offline,
+		// submitted, and the words were gone within ONE second — not in the
+		// composer, not in the transcript, nowhere. `?? false` because a host
+		// older than this contract resolves `undefined`, and "no answer" must
+		// count as undelivered rather than as a silent success.
+		return (await actions.sendMessage(images.length > 0 ? { text, attachments: images } : text)) ?? false;
 	};
 	const stop = () => {
 		if (!actions) return;
@@ -117,10 +132,23 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 			value={draft}
 			onChange={setDraftPersisted}
 			onSubmit={(text, attachments) => {
+				// Bind the key BEFORE anything awaits: the restore below must land in
+				// the session that was being composed INTO, never whichever one is on
+				// screen when a late verdict arrives.
+				const restoreKey = draftKey;
 				setDraftPersisted("");
-				send(text, attachments);
+				void (async () => {
+					if (await send(text, attachments)) return;
+					// The host reported the send FAILED, and `setDraftPersisted("")`
+					// above just discarded the only copy of these words. Put them
+					// back — unless the user has already started typing again, whose
+					// newer work outranks this restore.
+					if (!text || !restoreKey || drafts.get(restoreKey)) return;
+					drafts.set(restoreKey, text);
+					if (liveKeyRef.current === restoreKey) setDraft(text);
+				})();
 			}}
-			onStashSend={(text, attachments) => send(text, attachments)}
+			onStashSend={(text, attachments) => void send(text, attachments)}
 			onStop={stop}
 			streaming={Boolean(running)}
 			disabled={blocked}
