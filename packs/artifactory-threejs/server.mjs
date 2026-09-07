@@ -7,5 +7,8 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 const entry = createRequire(import.meta.url).resolve("@modelcontextprotocol/server-threejs");
+// Pushed BEFORE the import: the CLI reads argv at module load. Without the flag
+// it does not crash - it opens an HTTP listener on 0.0.0.0:3001 (read in the
+// published dist/index.js), silently, and a second pack does the same and collides.
 process.argv.push("--stdio");
 await import(pathToFileURL(join(dirname(entry), "index.js")).href);

@@ -9,5 +9,7 @@ The whole plugin is packaging: `.mcp.json` names the server (stdio), and
 `dimension.plugin.json` says which server the engine hosts as an App
 (`artifactories: [{ mcpServer: "threejs" }]`). Nothing else.
 
-Try it: `bun install` here, then link the directory as a plugin in a dev home
-(`plugins op:link` / `inso plugins link .`) and ask the agent to show a 3D scene.
+Try it: install `artifactory-threejs` from the Dimension marketplace (it is in
+the catalog), or `bun install` here and link the directory as a plugin in a dev
+home (`plugins op:link` / `inso plugins link .`); then ask the agent to show a
+3D scene.
