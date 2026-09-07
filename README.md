@@ -22,6 +22,15 @@ packs/
                   assembly-spine thesis demo (three plugins, nobody hand-wired).
   mochi-mark/     A mark component: the import-surface FLOOR (react only).
   pulse-mark/     The Store's demo mark: zero Fraym UI, one granted binding.
+  artifactory-threejs/
+                  An ARTIFACTORY — an MCP App, the reference three.js server
+                  from modelcontextprotocol/ext-apps, byte-for-byte. Packaging
+                  only: `.mcp.json` names the server, `dimension.plugin.json`
+                  says `artifactories: [{ mcpServer }]`. Rendered live in the
+                  artifact-view seat 2026-09-07.
+  artifactory-system-monitor/
+                  The second artifactory pilot: an app-only tool the model never
+                  sees, called from the View through the engine's consent gate.
 .dimension-plugin/
   marketplace.json  The catalog Dimension's plugin system reads.
 ```
@@ -38,12 +47,13 @@ lives in the Dimension repository: `docs/guides/building-a-custom-space.md`.
 |---|---|---|
 | **Zero-import floor** | `react` only — the Store arrives as a prop/context value; styling on the host's `--fr-*` custom properties | `pulse-mark`, `session-board` |
 | **In-tree** | `react` + enumerated `@fraym/ui` VALUES (each one a permanent capability grant, settled per component) | `independent-composer` · `independent-thread` (granted PARTS + bricks) |
-| **Sandboxed** | zero imports — the wire is the contract (MCP Apps transport; platform Phase 4) | none yet — see the retirement note below |
+| **Sandboxed** | zero imports — the wire is MCP Apps (`io.modelcontextprotocol/ui`), the platform's Phase 4; a pack is a real MCP server plus a `ui://` View, and the engine hosts it | `artifactory-threejs` · `artifactory-system-monitor` (both `defaultEnabled: false`) |
 
 ## How a pack gets in
 
 1. **Declare it.** `dimension.plugin.json` with `"type": "component"` (+ `slot`)
-   or `"type": "layout"` (+ `slots`) or `spaces`.
+   or `"type": "layout"` (+ `slots`) or `spaces` — or, for an MCP App,
+   `artifactories: [{ mcpServer }]` naming a server in the pack's `.mcp.json`.
 2. **Build against the published surface.** Facts come from the Store's
    published key table (`catalogue.json` in the Dimension repo — typed via
    `readFact`/`watchFact`); pixels are yours, drawn on `--fr-*` design tokens
@@ -68,11 +78,16 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
   load time. Some older packs still take workspace dependencies and therefore
   build inside the Dimension checkout; that is their limitation, not the
   contract's.
-- The **artifactory** contribution kind was **retired 2026-09-02**: the lane
-  never worked, so it was deleted rather than propped up. Sandboxed packs
-  return as **MCP Apps / web MCP apps on the open standard**; until that lands
-  there is nothing to ship in the sandboxed tier, and nothing here accepts an
-  `artifactory` pack.
+- The **artifactory** contribution kind was **retired 2026-09-02** (the old
+  lane never worked and was deleted) and **returned 2026-09-06/07 as an MCP
+  App on the open standard** — nothing bespoke: a plugin names which of its
+  `.mcp.json` servers the engine hosts (`artifactories: [{ mcpServer, label?,
+  icon? }]`), the engine spawns it once, reads the `ui://` View in-band, lends
+  the tools to every ACP harness through a proxy, and renders the View in the
+  `artifact-view` seat. The two packs above are the sandboxed tier's first
+  members; a stranger's App from the ext-apps repo runs here unmodified. What
+  is not built yet: a seat bound in a layout at boot (slice D) and a proof under
+  a harness other than OMP.
 - Runtime installation of UI component packs WORKS: a pack ships a committed
   `dist/` bundle, the app installs it from a marketplace source, and the loader
   resolves its imports through the host externals contract. `@dimension/sdk`

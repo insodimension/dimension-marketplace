@@ -1,0 +1,7 @@
+{
+	"plugin": "artifactory-threejs",
+	"contractVersion": 1,
+	"title": "Three.js",
+	"icon": "box",
+	"artifactories": [{ "mcpServer": "threejs", "label": "3D scene", "icon": "box" }]
+}
