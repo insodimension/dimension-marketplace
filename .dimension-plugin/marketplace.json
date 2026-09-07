@@ -766,6 +766,46 @@
 				"skill"
 			],
 			"pluginId": "ui-skills"
+		},
+		{
+			"name": "artifactory-threejs",
+			"source": "./packs/artifactory-threejs",
+			"description": "Three.js scenes as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified, hosted by the Dimension engine and rendered in the artifact-view seat. The Phase 4 pilot: zero code of its own, just packaging.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"artifactory",
+				"mcp-apps",
+				"three.js",
+				"3d",
+				"example"
+			],
+			"pluginId": "artifactory-threejs"
+		},
+		{
+			"name": "artifactory-system-monitor",
+			"source": "./packs/artifactory-system-monitor",
+			"description": "System Monitor as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified. A model-facing tool plus an app-only tool the View polls through the consent gate: the second Phase 4 pilot.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"artifactory",
+				"mcp-apps",
+				"system",
+				"monitor",
+				"example"
+			],
+			"pluginId": "artifactory-system-monitor"
 		}
 	]
 }

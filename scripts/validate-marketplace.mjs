@@ -1,7 +1,7 @@
 // Standalone catalog validator - no dependencies, runs on bare node/bun.
 // The monorepo runs each pack's tests; THIS repo's CI can only see itself,
 // so it validates what is checkable standalone: the catalog and pack layout.
-import { readFileSync, existsSync, statSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -86,6 +86,20 @@ for (const plugin of catalog.plugins ?? []) {
 	}
 	if (typeof plugin.license !== "string" || plugin.license.length === 0) {
 		errors.push(`plugin "${label}": license is required`);
+	}
+}
+
+// A pack that exists but is not listed is invisible to the store: it can only
+// ever be dev-linked, and the engine's provenance (`<name>@<marketplace>`) is
+// never minted for it. Two artifactory pilots shipped that way (review of #32),
+// with CI green because this loop only ever walked `catalog.plugins`.
+const packsDir = join(root, "packs");
+if (existsSync(packsDir)) {
+	const listed = new Set((catalog.plugins ?? []).map(plugin => plugin.source));
+	for (const dir of readdirSync(packsDir).sort()) {
+		const packDir = join(packsDir, dir);
+		if (!statSync(packDir).isDirectory() || !existsSync(join(packDir, "package.json"))) continue;
+		if (!listed.has(`./packs/${dir}`)) errors.push(`packs/${dir} exists but has no catalog entry (CONTRIBUTING.md step 5)`);
 	}
 }
 
