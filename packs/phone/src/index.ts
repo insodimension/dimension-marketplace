@@ -3,7 +3,7 @@
 // which is `phone-switcher` (`placement: "rail-head"`) so no column is spent
 // on it. Zero pixels, zero runtime, no reimplementation anywhere in the chain.
 //
-// What this space is FOR: it is what Dimension Mobile mounts
+// What this space is FOR: it is what Inso Mobile mounts
 // (`enabledSpaces: ["phone"]`), and on a desktop it is the honest preview of
 // what a phone sees — pick it in the switcher and narrow the window.
 export {};

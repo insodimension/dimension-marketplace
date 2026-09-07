@@ -198,7 +198,7 @@
 		{
 			"name": "phone",
 			"source": "./packs/phone",
-			"description": "Phone - the Code session surface laid out for a 360-430px phone. The same shared components as Code (Assembled), bound to a layout with no switcher column (phone-switcher mounts in the rail drawer's head). The space Dimension Mobile lands in; on a desktop, the honest preview of what a phone sees.",
+			"description": "Phone - the Code session surface laid out for a 360-430px phone. The same shared components as Code (Assembled), bound to a layout with no switcher column (phone-switcher mounts in the rail drawer's head). The space Inso Mobile lands in; on a desktop, the honest preview of what a phone sees.",
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"
