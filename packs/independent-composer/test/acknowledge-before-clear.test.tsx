@@ -300,10 +300,63 @@ describe("a late acknowledgement cannot overwrite what came after it", () => {
 		await act(async () => answer.settle(true));
 		await flush();
 
+		// TWO FACTS ARE GLUED TOGETHER ON THIS LINE, AND THE SECOND IS A DEFECT.
+		// (1) The contract this test defends: A's late acknowledgement did not
+		//     empty the field in front of a reader who has already moved on.
+		// (2) NOT a contract — CROSS-SESSION DRAFT BLEED, recorded here as
+		//     CURRENT behaviour, not as desired behaviour: the field the reader
+		//     sees under session B still holds session A's words. `draft` is
+		//     `useState(() => drafts.get(draftKey) ?? "")` (src/index.tsx:67),
+		//     initialised ONCE, and the host mounts this section with no `key` —
+		//     the session arrives as a prop
+		//     (fraym/packages/ui/src/shell/workspace-session-pane-core.tsx:217) —
+		//     so a session switch REUSES this instance and the old text stays on
+		//     screen. The next keystroke then persists A's words under B's key.
+		//     The classic composer is immune because it derives the draft FROM
+		//     the key: `useSessionComposerDraft(draftKey)`
+		//     (fraym/packages/ui/src/shell/space/impls/composer-classic.tsx:58-59),
+		//     which re-reads whenever the key changes.
+		//     When that fix lands here this line becomes `.toBe("")`, and fact
+		//     (1) loses its on-screen surface — assert it through A's map entry
+		//     (the `reopen` below) at that point, not through the visible value.
 		expect(value_()).toBe(SENT);
 		await view.unmount();
 		// A's delivered copy is gone — the map is keyed, so the right session's
 		// copy was the one dropped.
 		expect(await reopen("left-session-a")).toBe("");
+	});
+});
+
+describe("a stray second Enter cannot post the message twice", () => {
+	test("resubmitting the SAME text while the first send is unresolved does not send twice", async () => {
+		// The device condition from the first contract in this file: the wire is
+		// down, so `sendMessage` never resolves — and because the words
+		// deliberately stay on screen, the reader believes the send failed and
+		// presses Enter again.
+		const view = await mount("double-enter", () => new Promise<boolean>(() => {}));
+		await type(SENT);
+		await submit(SENT);
+		await flush();
+		await submit(SENT);
+		await flush();
+
+		expect(view.sent).toEqual([SENT]);
+		// Still unacknowledged, so this remains the only copy of the words.
+		expect(value_()).toBe(SENT);
+	});
+
+	test("editing the text and resubmitting while the first send is unresolved DOES send", async () => {
+		// The guard is keyed `(draftKey, text)`. Keyed on the session alone it
+		// would swallow the correction the reader typed BECAUSE the first send
+		// looked like it failed — a worse bug than the duplicate it prevents.
+		const view = await mount("edit-and-resend", () => new Promise<boolean>(() => {}));
+		await type(SENT);
+		await submit(SENT);
+		await flush();
+		await type(NEWER);
+		await submit(NEWER);
+		await flush();
+
+		expect(view.sent).toEqual([SENT, NEWER]);
 	});
 });

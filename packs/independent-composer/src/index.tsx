@@ -75,6 +75,19 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 	liveKeyRef.current = draftKey;
 	const draftRef = useRef(draft);
 	draftRef.current = draft;
+	// IN FLIGHT, because the text deliberately stays on screen. Keeping the words
+	// until they are known to have left (see `onSubmit`) is the right call — it is
+	// device-measured, board `mtrghytjnr2mrx` — but it removes the accident that
+	// used to make a second Enter harmless: an eagerly-cleared field submits
+	// nothing. Here the field still holds the text for as long as the send is
+	// unresolved, and `sendMessage` resolves only when the TURN settles
+	// (`composer-classic.tsx:133`), so that window is the whole answer. A user
+	// looking at words they believe did not send will press Enter again, and
+	// without this guard that posts the same message twice.
+	//
+	// Keyed by the draft key, not a bare boolean: two sessions can each have a
+	// send outstanding, and a switch back must not find the other one's flag.
+	const inFlight = useRef(new Set<string>());
 	const facts = (useObservable(session ?? NO_SESSION) ?? null) as {
 		readonly isStreaming?: boolean;
 		readonly turnPhase?: "streaming" | "settled";
@@ -151,12 +164,28 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 				// controlled `value`, so the words simply stay on screen until they
 				// are known to have left. An unsent message you can still see is the
 				// honest state; an empty field is a lie about where your words went.
+				// REFUSE A SECOND SEND OF THE SAME TEXT while the first is unresolved.
+				// The guard is `(key, text)`, not the key alone: a user who edits and
+				// resubmits is sending something new and must not be blocked, while the
+				// stray Enter this exists to stop repeats the identical string.
+				const flightId = `${sentKey}\u0000${text}`;
+				if (inFlight.current.has(flightId)) return;
+				inFlight.current.add(flightId);
 				void (async () => {
-					if (!(await send(text, attachments))) return;
-					// Delivered. Now it is safe to drop the copy — and only if the user
-					// has not typed something newer while it was in flight.
-					if (drafts.get(sentKey) === text) drafts.delete(sentKey);
-					if (liveKeyRef.current === sentKey && draftRef.current === text) setDraft("");
+					try {
+						if (!(await send(text, attachments))) return;
+						// Delivered. Now it is safe to drop the copy — and only if the user
+						// has not typed something newer while it was in flight.
+						if (drafts.get(sentKey) === text) drafts.delete(sentKey);
+						if (liveKeyRef.current === sentKey && draftRef.current === text) setDraft("");
+					} finally {
+						// Released in `finally` so a throw or a rejected send cannot wedge
+						// the composer against ever sending that text again. A send that
+						// never resolves at all — the offline case above — holds its slot
+						// for as long as it is genuinely outstanding, which is correct:
+						// that message really is still in flight.
+						inFlight.current.delete(flightId);
+					}
 				})();
 			}}
 			onStashSend={(text, attachments) => void send(text, attachments)}
