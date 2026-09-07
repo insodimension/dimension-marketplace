@@ -1,0 +1,82 @@
+{
+	"plugin": "artifactory-desk",
+	"contractVersion": 1,
+	"title": "Desk",
+	"type": "layout",
+	"slots": [
+		{
+			"id": "switcher",
+			"contract": "switcher"
+		},
+		{
+			"id": "rail",
+			"contract": "rail",
+			"items": "sessions"
+		},
+		{
+			"id": "workspace",
+			"contract": "workspace"
+		},
+		{
+			"id": "monitor",
+			"contract": "artifact-view",
+			"app": {
+				"server": "artifactory-system-monitor/system-monitor",
+				"tool": "get-system-info"
+			}
+		},
+		{
+			"id": "dock",
+			"contract": "dock"
+		}
+	],
+	"spaces": [
+		{
+			"specVersion": 1,
+			"id": "desk",
+			"label": "Desk",
+			"icon": "monitor",
+			"order": 91,
+			"description": "The slice D proof: a space whose layout PINS an MCP App into its artifact-view seat. Opening a session here mounts the System Monitor View with no agent turn — the host calls the tool the layout declared. Close the tab and it stays closed; reload the window and every live View comes back from the engine's own list.",
+			"mark": {
+				"fill": "mochi-mark",
+				"accent": "#8fd3b6",
+				"label": "Desk"
+			},
+			"layout": "artifactory-desk",
+			"components": {
+				"rail": "classic-rail"
+			},
+			"rail": {
+				"preferredMode": "compact",
+				"actions": [
+					{
+						"id": "desk-new-session",
+						"label": "New session",
+						"icon": "plus",
+						"target": "new-session",
+						"primary": true
+					}
+				]
+			},
+			"workspace": {
+				"surfaces": [
+					"session"
+				],
+				"start": "session",
+				"session": "session"
+			},
+			"generalAgents": {
+				"list": "discoverable",
+				"default": "coding"
+			},
+			"requires": {
+				"plugins": [
+					"mochi-mark",
+					"classic-rail",
+					"artifactory-system-monitor"
+				]
+			}
+		}
+	]
+}

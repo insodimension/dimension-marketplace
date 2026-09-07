@@ -866,6 +866,27 @@
 				"example"
 			],
 			"pluginId": "artifactory-system-monitor"
+		},
+		{
+			"name": "artifactory-desk",
+			"source": "./packs/artifactory-desk",
+			"description": "Desk — a layout whose artifact-view seat is filled at boot by a declared MCP App (the System Monitor pilot); the Phase 4 slice D proof that a space can seat an App with no agent turn.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "layout",
+			"tags": [
+				"layout",
+				"space",
+				"artifactory",
+				"mcp-apps",
+				"pin",
+				"demo"
+			],
+			"pluginId": "artifactory-desk"
 		}
 	]
 }
