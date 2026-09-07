@@ -1,5 +1,5 @@
 import { Composer, GoalComposerSurface, UsageLimitComposerSurface, useArgumentCompletions, useFileCompletions, useObservable, useSlashCommands } from "@fraym/ui";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 //#region src/index.tsx
 /** Stable identity for the no-session case: `useObservable` is a
@@ -18,6 +18,10 @@ function IndependentComposer(props) {
 	const { sessionRef, placeholder, actions, session, disabled, opening, continuation, leftSlot, rightSlot } = props;
 	const draftKey = sessionRef ? `${sessionRef.workspaceId}\0${sessionRef.sessionId}` : "";
 	const [draft, setDraft] = useState(() => drafts.get(draftKey) ?? "");
+	const liveKeyRef = useRef(draftKey);
+	liveKeyRef.current = draftKey;
+	const draftRef = useRef(draft);
+	draftRef.current = draft;
 	const facts = useObservable(session ?? NO_SESSION) ?? null;
 	const slashCommands = useSlashCommands(draft);
 	const fileCompletionSource = useFileCompletions();
@@ -30,18 +34,18 @@ function IndependentComposer(props) {
 	const blocked = disabled || !sessionRef || !actions || continuation.continued;
 	const running = Boolean(facts?.isStreaming) || facts?.turnPhase === "streaming";
 	const goal = facts?.goal ?? null;
-	const send = (text, attachments = []) => {
-		if (!actions || blocked) return;
+	const send = async (text, attachments = []) => {
+		if (!actions || blocked) return false;
 		const images = attachments.map((a) => ({
 			kind: "image",
 			mimeType: a.mimeType,
 			data: a.data,
 			name: a.name
 		}));
-		actions.sendMessage(images.length > 0 ? {
+		return await actions.sendMessage(images.length > 0 ? {
 			text,
 			attachments: images
-		} : text);
+		} : text) ?? false;
 	};
 	const stop = () => {
 		if (!actions) return;
@@ -51,10 +55,14 @@ function IndependentComposer(props) {
 		value: draft,
 		onChange: setDraftPersisted,
 		onSubmit: (text, attachments) => {
-			setDraftPersisted("");
-			send(text, attachments);
+			const sentKey = draftKey;
+			(async () => {
+				if (!await send(text, attachments)) return;
+				if (drafts.get(sentKey) === text) drafts.delete(sentKey);
+				if (liveKeyRef.current === sentKey && draftRef.current === text) setDraft("");
+			})();
 		},
-		onStashSend: (text, attachments) => send(text, attachments),
+		onStashSend: (text, attachments) => void send(text, attachments),
 		onStop: stop,
 		streaming: Boolean(running),
 		disabled: blocked,

@@ -178,6 +178,66 @@
 			]
 		},
 		{
+			"name": "phone-switcher",
+			"source": "./packs/phone-switcher",
+			"description": "The space switcher as a rail-head menu: re-exports SWITCHER_DROPDOWN from @fraym/ui. For layouts that cannot afford a 56px switcher column — the `phone` layout.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"switcher",
+				"phone"
+			],
+			"pluginId": "phone-switcher"
+		},
+		{
+			"name": "phone",
+			"source": "./packs/phone",
+			"description": "Phone - the Code session surface laid out for a 360-430px phone. The same shared components as Code (Assembled), bound to a layout with no switcher column (phone-switcher mounts in the rail drawer's head). The space Inso Mobile lands in; on a desktop, the honest preview of what a phone sees.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "layout",
+			"tags": [
+				"layout",
+				"space",
+				"phone",
+				"mobile"
+			],
+			"pluginId": "phone",
+			"spaces": [
+				{
+					"id": "phone",
+					"label": "Phone",
+					"tagline": "Your sessions, tool cards and approvals on a phone — the same components, laid out for one hand.",
+					"screenshots": [
+						"packs/phone/assets/preview/session.webp",
+						"packs/phone/assets/preview/drawer.webp",
+						"packs/phone/assets/preview/start.webp"
+					],
+					"icon": "phone",
+					"accent": "#f59e0b",
+					"requires": [
+						"phone-switcher",
+						"independent-rail",
+						"classic-workspace",
+						"classic-dock",
+						"independent-thread",
+						"independent-composer",
+						"classic-environment"
+					]
+				}
+			]
+		},
+		{
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"

@@ -1,0 +1,22 @@
+{
+	"name": "@dimension/phone",
+	"author": "Dimension",
+	"version": "0.1.0",
+	"description": "Phone - the Code session surface laid out for a 360-430px phone: a layout with no switcher column, plus a space binding the same shared components Code (Assembled) uses.",
+	"type": "module",
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+	"private": true,
+	"omp": {
+		"name": "phone",
+		"description": "Phone - the space Inso Mobile lands in. Same components as Code, laid out for one hand.",
+		"defaultEnabled": true,
+		"category": "layout",
+		"keywords": [
+			"layout",
+			"space",
+			"phone",
+			"mobile"
+		]
+	}
+}

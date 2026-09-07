@@ -26,7 +26,7 @@ import {
 	useSlashCommands,
 	UsageLimitComposerSurface,
 } from "@fraym/ui";
-import { useState, type ReactNode } from "react";
+import { type ReactNode, useRef, useState } from "react";
 
 /** The prop shape this composer uses, declared structurally — a marketplace
  *  author has no path into the host's internal contract modules, and none is
@@ -36,7 +36,7 @@ interface ComposerProps {
 	readonly placeholder: string;
 	readonly actions?:
 		| {
-				readonly sendMessage: (input: unknown) => Promise<void>;
+				readonly sendMessage: (input: unknown) => Promise<boolean | void>;
 				readonly interruptRunForQueuedMessage: () => Promise<void>;
 		  }
 		| null;
@@ -65,6 +65,29 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 	const { sessionRef, placeholder, actions, session, disabled, opening, continuation, leftSlot, rightSlot } = props;
 	const draftKey = sessionRef ? `${sessionRef.workspaceId}\0${sessionRef.sessionId}` : "";
 	const [draft, setDraft] = useState(() => drafts.get(draftKey) ?? "");
+	// The key and the text this component is CURRENTLY bound to, readable from an
+	// async acknowledgement. A send resolves when the turn settles, by which point
+	// the user may have switched sessions or typed something newer — the module
+	// `drafts` map is keyed so it is always the right session's copy, but local
+	// state must only be touched while this component still shows that session
+	// AND still holds the exact text that was sent.
+	const liveKeyRef = useRef(draftKey);
+	liveKeyRef.current = draftKey;
+	const draftRef = useRef(draft);
+	draftRef.current = draft;
+	// IN FLIGHT, because the text deliberately stays on screen. Keeping the words
+	// until they are known to have left (see `onSubmit`) is the right call — it is
+	// device-measured, board `mtrghytjnr2mrx` — but it removes the accident that
+	// used to make a second Enter harmless: an eagerly-cleared field submits
+	// nothing. Here the field still holds the text for as long as the send is
+	// unresolved, and `sendMessage` resolves only when the TURN settles
+	// (`composer-classic.tsx:133`), so that window is the whole answer. A user
+	// looking at words they believe did not send will press Enter again, and
+	// without this guard that posts the same message twice.
+	//
+	// Keyed by the draft key, not a bare boolean: two sessions can each have a
+	// send outstanding, and a switch back must not find the other one's flag.
+	const inFlight = useRef(new Set<string>());
 	const facts = (useObservable(session ?? NO_SESSION) ?? null) as {
 		readonly isStreaming?: boolean;
 		readonly turnPhase?: "streaming" | "settled";
@@ -86,11 +109,11 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 	const running = Boolean(facts?.isStreaming) || facts?.turnPhase === "streaming";
 	const goal = (facts?.goal ?? null) as { readonly objective?: string } | null | undefined;
 
-	const send = (
+	const send = async (
 		text: string,
 		attachments: readonly { readonly data: string; readonly mimeType: string; readonly name?: string }[] = [],
-	) => {
-		if (!actions || blocked) return;
+	): Promise<boolean> => {
+		if (!actions || blocked) return false;
 		// NO `running` guard: `actions.sendMessage` is the ONE behavior path and
 		// the HOST resolves queue-vs-send (a send while streaming QUEUES, the
 		// same as the reference — the shipped composer has no streaming guard
@@ -105,7 +128,15 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 		// image behind an "[Image #N]" marker. Map them to the wire shape the
 		// reference's sendComposed produces.
 		const images = attachments.map(a => ({ kind: "image", mimeType: a.mimeType, data: a.data, name: a.name }));
-		void actions.sendMessage(images.length > 0 ? { text, attachments: images } : text);
+		// RETURN the host's delivery verdict. The comment above records this
+		// file's own history of vaporizing composed text; the FAILURE path had
+		// the same hole, because `onSubmit` clears the draft and this call threw
+		// the answer away. Observed on a real device 2026-09-07: typed offline,
+		// submitted, and the words were gone within ONE second — not in the
+		// composer, not in the transcript, nowhere. `?? false` because a host
+		// older than this contract resolves `undefined`, and "no answer" must
+		// count as undelivered rather than as a silent success.
+		return (await actions.sendMessage(images.length > 0 ? { text, attachments: images } : text)) ?? false;
 	};
 	const stop = () => {
 		if (!actions) return;
@@ -117,10 +148,47 @@ export default function IndependentComposer(props: ComposerSectionProps) {
 			value={draft}
 			onChange={setDraftPersisted}
 			onSubmit={(text, attachments) => {
-				setDraftPersisted("");
-				send(text, attachments);
+				// Bind the key BEFORE anything awaits: the acknowledgement below must
+				// act on the session that was being composed INTO, never whichever one
+				// is on screen when a late answer arrives.
+				const sentKey = draftKey;
+				// DO NOT clear the draft here. Until the host acknowledges delivery
+				// this IS the only copy of the user's words, and clear-then-restore
+				// cannot work: with the wire down `sendMessage` never resolves at all,
+				// so there is no verdict to restore on. Measured on a device
+				// (2026-09-07, board mtrghytjnr2mrx) — typed offline, submitted, and
+				// the text was gone in under a second with nothing ever coming back.
+				//
+				// Leaving it costs nothing visually: `Composer.submitValue` clears its
+				// attachment pills itself but deliberately leaves the TEXT to this
+				// controlled `value`, so the words simply stay on screen until they
+				// are known to have left. An unsent message you can still see is the
+				// honest state; an empty field is a lie about where your words went.
+				// REFUSE A SECOND SEND OF THE SAME TEXT while the first is unresolved.
+				// The guard is `(key, text)`, not the key alone: a user who edits and
+				// resubmits is sending something new and must not be blocked, while the
+				// stray Enter this exists to stop repeats the identical string.
+				const flightId = `${sentKey}\u0000${text}`;
+				if (inFlight.current.has(flightId)) return;
+				inFlight.current.add(flightId);
+				void (async () => {
+					try {
+						if (!(await send(text, attachments))) return;
+						// Delivered. Now it is safe to drop the copy — and only if the user
+						// has not typed something newer while it was in flight.
+						if (drafts.get(sentKey) === text) drafts.delete(sentKey);
+						if (liveKeyRef.current === sentKey && draftRef.current === text) setDraft("");
+					} finally {
+						// Released in `finally` so a throw or a rejected send cannot wedge
+						// the composer against ever sending that text again. A send that
+						// never resolves at all — the offline case above — holds its slot
+						// for as long as it is genuinely outstanding, which is correct:
+						// that message really is still in flight.
+						inFlight.current.delete(flightId);
+					}
+				})();
 			}}
-			onStashSend={(text, attachments) => send(text, attachments)}
+			onStashSend={(text, attachments) => void send(text, attachments)}
 			onStop={stop}
 			streaming={Boolean(running)}
 			disabled={blocked}
