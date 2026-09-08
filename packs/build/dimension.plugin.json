@@ -58,12 +58,6 @@
 						"primary": true
 					},
 					{
-						"id": "loops",
-						"label": "Autonomy",
-						"icon": "orbit",
-						"target": "loops"
-					},
-					{
 						"id": "models",
 						"label": "Models",
 						"icon": "bot",
