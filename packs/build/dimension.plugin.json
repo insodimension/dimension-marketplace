@@ -3,6 +3,9 @@
 	"contractVersion": 1,
 	"title": "Build",
 	"type": "layout",
+	"requires": {
+		"dimension": ">=0.9.89"
+	},
 	"slots": [
 		{
 			"id": "ca-switcher",
@@ -56,12 +59,6 @@
 						"target": "new-session",
 						"kbd": "Cmd+N",
 						"primary": true
-					},
-					{
-						"id": "loops",
-						"label": "Autonomy",
-						"icon": "orbit",
-						"target": "loops"
 					},
 					{
 						"id": "models",

@@ -18,7 +18,7 @@
 	},
 	"dimension": {
 		"name": "classic-dock",
-		"description": "Classic Dock - the shipped dock column (tab strip, resize handle, panel body), installable.",
+		"description": "The shipped dock COLUMN as a pack — tab strip, resize handle, panel body. Fills the `dock-column` contract (a `dock` component is an instrument, i.e. one tab).",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

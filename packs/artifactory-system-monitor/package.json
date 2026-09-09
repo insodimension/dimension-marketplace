@@ -10,7 +10,7 @@
 	},
 	"dimension": {
 		"name": "artifactory-system-monitor",
-		"description": "System Monitor — a stranger's MCP App whose View calls its server's app-only tool through the consent gate.",
+		"description": "System Monitor as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified. A model-facing tool plus an app-only tool the View polls through the consent gate: the second Phase 4 pilot.",
 		"defaultEnabled": false,
 		"category": "artifactory",
 		"keywords": ["artifactory", "mcp-apps", "system", "example"]

@@ -18,7 +18,7 @@
 	},
 	"dimension": {
 		"name": "classic-workspace",
-		"description": "Classic Workspace Host - the shipped center pane (splits, tiling, overlays), installable.",
+		"description": "The shipped workspace host as a pack — the center pane's splits, tiling and overlays. The first marketplace part to ever fill the `workspace` contract.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

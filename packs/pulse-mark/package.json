@@ -12,7 +12,7 @@
 	},
 	"dimension": {
 		"name": "pulse-mark",
-		"description": "Pulse Mark — a demo mark component: an activity beacon that pulses while any session is running.",
+		"description": "The Store's demo component: a mark with zero Fraym UI reading `sessions/list` through the one granted binding, selector-gated to a single boolean — the zero-import tier demonstrated.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

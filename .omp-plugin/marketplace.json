@@ -9,9 +9,38 @@
 	},
 	"plugins": [
 		{
-			"name": "three-lane",
-			"source": "./packs/three-lane",
-			"description": "A layout that declares its OWN slots (lane-left / lane-main / lane-dock / badge) and ships Demo Lane — the assembly-spine thesis demo: a space assembled from three plugins nobody hand-wired together.",
+			"name": "agents-best-practices",
+			"source": "./packs/agents-best-practices",
+			"pluginId": "agents-best-practices",
+			"title": "Agents Best Practices",
+			"icon": "packs/agents-best-practices/assets/icon.svg",
+			"description": "Agents Best Practices — provider-neutral agent-harness architecture: loops, tools, permissions, planning, memory, compaction, evals, safety",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "skills",
+			"tags": [
+				"agents",
+				"harness",
+				"architecture",
+				"tools",
+				"mcp",
+				"evals",
+				"prompt-caching",
+				"memory",
+				"compaction",
+				"skill"
+			]
+		},
+		{
+			"name": "artifactory-desk",
+			"source": "./packs/artifactory-desk",
+			"pluginId": "artifactory-desk",
+			"title": "Desk",
+			"description": "Desk — a layout that seats the System Monitor App at boot, plus the Desk space that assembles on it.",
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"
@@ -22,120 +51,76 @@
 			"tags": [
 				"layout",
 				"space",
+				"artifactory",
+				"mcp-apps",
+				"pin",
 				"demo"
 			],
-			"pluginId": "three-lane",
 			"spaces": [
 				{
-					"id": "demo-lane",
-					"label": "Demo Lane",
-					"tagline": "The assembly-spine thesis demo: a space assembled from parts nobody in this repo hand-wired — this plugin's own layout, another plugin's mark in the badge slot, and a third plugin's rail (classic-rail) filling the left lane. Its session surface takes the host's own sections; a contributed thread once filled them and the pack that did is gone, so the description no longer promises one.",
-					"icon": "layers",
-					"accent": "#f2a3c2",
+					"id": "desk",
+					"label": "Desk",
+					"tagline": "The slice D proof: a space whose layout PINS an MCP App into its artifact-view seat. Opening a session here mounts the System Monitor View with no agent turn — the host calls the tool the layout declared. Close the tab and it stays closed; reload the window and every live View comes back from the engine's own list.",
+					"icon": "monitor",
+					"accent": "#8fd3b6",
 					"requires": [
 						"mochi-mark",
-						"classic-rail"
+						"classic-rail",
+						"artifactory-system-monitor"
 					]
 				}
 			]
 		},
 		{
-			"name": "mochi-mark",
-			"source": "./packs/mochi-mark",
-			"description": "A mark component drawn in a declared slot of a plugin layout — the import-surface FLOOR: react only, zero @fraym/ui.",
+			"name": "artifactory-system-monitor",
+			"source": "./packs/artifactory-system-monitor",
+			"pluginId": "artifactory-system-monitor",
+			"title": "System Monitor",
+			"icon": "monitor",
+			"description": "System Monitor as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified. A model-facing tool plus an app-only tool the View polls through the consent gate: the second Phase 4 pilot.",
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"
 			},
 			"repository": "https://github.com/insodimension/dimension-marketplace",
 			"license": "MIT",
-			"category": "component",
+			"category": "artifactory",
 			"tags": [
-				"mark",
-				"component",
-				"demo"
-			],
-			"pluginId": "mochi-mark"
+				"artifactory",
+				"mcp-apps",
+				"system",
+				"example"
+			]
 		},
 		{
-			"name": "pulse-mark",
-			"source": "./packs/pulse-mark",
-			"description": "The Store's demo component: a mark with zero Fraym UI reading `sessions/list` through the one granted binding, selector-gated to a single boolean — the zero-import tier demonstrated.",
+			"name": "artifactory-threejs",
+			"source": "./packs/artifactory-threejs",
+			"pluginId": "artifactory-threejs",
+			"title": "Three.js",
+			"icon": "box",
+			"description": "Three.js scenes as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified, hosted by the Dimension engine and rendered in the artifact-view seat. The Phase 4 pilot: zero code of its own, just packaging.",
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"
 			},
 			"repository": "https://github.com/insodimension/dimension-marketplace",
 			"license": "MIT",
-			"category": "component",
+			"category": "artifactory",
 			"tags": [
-				"mark",
-				"component",
-				"store"
-			],
-			"pluginId": "pulse-mark"
-		},
-		{
-			"name": "session-board",
-			"source": "./packs/session-board",
-			"description": "Sessions - mission control in the dock: every session partitioned by urgency (needs you / working / idle), one-click switching. The first contributed dock component (\"type\": \"component\", \"slot\": \"dock\"), at the zero-import floor.",
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "component",
-			"tags": [
-				"component",
-				"dock",
-				"sessions",
-				"store"
-			],
-			"pluginId": "session-board"
-		},
-		{
-			"name": "classic-rail",
-			"source": "./packs/classic-rail",
-			"description": "The shipped session rail, installable: re-exports RAIL_CLASSIC from @fraym/ui - project grouping, rail actions, search, the full row model.",
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "component",
-			"tags": [
-				"component",
-				"rail",
-				"classic"
-			],
-			"pluginId": "classic-rail"
-		},
-		{
-			"name": "classic-environment",
-			"source": "./packs/classic-environment",
-			"description": "The shipped environment card, installable: re-exports ENVIRONMENT_CLASSIC from @fraym/ui - live SCM scan, submodule pins, worktree verbs, Push.",
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "component",
-			"tags": [
-				"component",
-				"widget",
-				"environment",
-				"classic"
-			],
-			"pluginId": "classic-environment"
+				"artifactory",
+				"mcp-apps",
+				"three.js",
+				"3d",
+				"example"
+			]
 		},
 		{
 			"name": "build",
 			"source": "./packs/build",
+			"pluginId": "build",
+			"title": "Build",
 			"description": "Build - the assembled workspace. The Code space rebuilt entirely from marketplace packs: rail, thread, composer, start surface, dock, environment and switcher are all replaceable parts. Install it beside Code and swap any one of them without touching the app.",
-			"version": "0.1.0",
+			"version": "0.1.1",
 			"author": {
 				"name": "Dimension"
 			},
@@ -148,7 +133,9 @@
 				"assembly",
 				"build"
 			],
-			"pluginId": "build",
+			"requires": {
+				"dimension": ">=0.9.89"
+			},
 			"spaces": [
 				{
 					"id": "build",
@@ -178,9 +165,92 @@
 			]
 		},
 		{
-			"name": "phone-switcher",
-			"source": "./packs/phone-switcher",
-			"description": "The space switcher as a rail-head menu: re-exports SWITCHER_DROPDOWN from @fraym/ui. For layouts that cannot afford a 56px switcher column — the `phone` layout.",
+			"name": "classic-dock",
+			"source": "./packs/classic-dock",
+			"pluginId": "classic-dock",
+			"title": "Classic Dock",
+			"icon": "layers",
+			"description": "The shipped dock COLUMN as a pack — tab strip, resize handle, panel body. Fills the `dock-column` contract (a `dock` component is an instrument, i.e. one tab).",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"dock",
+				"classic"
+			]
+		},
+		{
+			"name": "classic-environment",
+			"source": "./packs/classic-environment",
+			"pluginId": "classic-environment",
+			"title": "Classic Environment",
+			"icon": "layers",
+			"description": "The shipped environment card, installable: re-exports ENVIRONMENT_CLASSIC from @fraym/ui - live SCM scan, submodule pins, worktree verbs, Push.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"workspace-surface",
+				"classic"
+			]
+		},
+		{
+			"name": "classic-rail",
+			"source": "./packs/classic-rail",
+			"pluginId": "classic-rail",
+			"title": "Classic Rail",
+			"icon": "list",
+			"description": "The shipped session rail, installable: re-exports RAIL_CLASSIC from @fraym/ui - project grouping, rail actions, search, the full row model.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"rail",
+				"classic"
+			]
+		},
+		{
+			"name": "classic-start",
+			"source": "./packs/classic-start",
+			"pluginId": "classic-start",
+			"title": "Classic Start",
+			"icon": "plus",
+			"description": "The shipped START SURFACE as a pack — the session surface's front door: hero composer, Project · Work strip, popover menus. Fills the `start` contract (a SECTION like `thread`/`composer`, resolved inside the session surface). The hero sentence comes from the space's `workspace.startCopy`, never from the kit.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"start",
+				"classic"
+			]
+		},
+		{
+			"name": "classic-switcher",
+			"source": "./packs/classic-switcher",
+			"pluginId": "classic-switcher",
+			"title": "Classic Switcher",
+			"icon": "layers",
+			"description": "The shipped switcher rail as a pack — the far-left column of space marks.",
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"
@@ -191,13 +261,330 @@
 			"tags": [
 				"component",
 				"switcher",
-				"phone"
-			],
-			"pluginId": "phone-switcher"
+				"classic"
+			]
+		},
+		{
+			"name": "classic-workspace",
+			"source": "./packs/classic-workspace",
+			"pluginId": "classic-workspace",
+			"title": "Classic Workspace Host",
+			"icon": "columns",
+			"description": "The shipped workspace host as a pack — the center pane's splits, tiling and overlays. The first marketplace part to ever fill the `workspace` contract.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"workspace",
+				"classic"
+			]
+		},
+		{
+			"name": "discord",
+			"source": "./packs/discord",
+			"pluginId": "discord",
+			"title": "Discord",
+			"icon": "packs/discord/assets/icon.svg",
+			"description": "Discord connector — list servers/channels, read and send messages via a bot token",
+			"version": "0.1.2",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"discord",
+				"chat",
+				"bot",
+				"messaging",
+				"connector"
+			]
+		},
+		{
+			"name": "github",
+			"source": "./packs/github",
+			"pluginId": "github",
+			"title": "GitHub",
+			"icon": "packs/github/assets/icon.svg",
+			"description": "GitHub connector — issues, PRs, releases, repos, and search via the gh CLI",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"github",
+				"git",
+				"gh",
+				"issues",
+				"pull-requests",
+				"releases",
+				"connector"
+			]
+		},
+		{
+			"name": "gmail",
+			"source": "./packs/gmail",
+			"pluginId": "gmail",
+			"title": "Gmail",
+			"icon": "packs/gmail/assets/icon.svg",
+			"description": "Email connector — read/search/compose/reply over IMAP/SMTP via himalaya",
+			"version": "0.1.1",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"email",
+				"gmail",
+				"imap",
+				"smtp",
+				"himalaya",
+				"connector"
+			]
+		},
+		{
+			"name": "google-calendar",
+			"source": "./packs/google-calendar",
+			"pluginId": "google-calendar",
+			"title": "Google Calendar",
+			"icon": "packs/google-calendar/assets/icon.png",
+			"description": "Manage Google Calendar events and schedules",
+			"version": "0.1.2",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"google-calendar",
+				"calendar",
+				"agenda",
+				"daily-brief",
+				"scheduling",
+				"productivity"
+			]
+		},
+		{
+			"name": "google-drive",
+			"source": "./packs/google-drive",
+			"pluginId": "google-drive",
+			"title": "Google Drive",
+			"icon": "packs/google-drive/assets/icon.svg",
+			"description": "Google Drive connector — list/search/read files via OAuth",
+			"version": "0.1.1",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"google",
+				"drive",
+				"oauth",
+				"files",
+				"connector"
+			]
+		},
+		{
+			"name": "google-meet",
+			"source": "./packs/google-meet",
+			"pluginId": "google-meet",
+			"title": "Google Meet",
+			"icon": "packs/google-meet/assets/icon.svg",
+			"description": "Create Google Meet spaces, read conference records/recordings/transcripts, and live-transcribe a call",
+			"version": "0.1.1",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"google-meet",
+				"meet",
+				"meetings",
+				"transcription",
+				"conference-records",
+				"recordings",
+				"productivity"
+			]
+		},
+		{
+			"name": "google-workspace",
+			"source": "./packs/google-workspace",
+			"pluginId": "google-workspace",
+			"title": "Google Workspace",
+			"icon": "packs/google-workspace/assets/icon.svg",
+			"description": "Google Workspace connector — read/write Sheets, Docs, and Slides via OAuth",
+			"version": "0.1.1",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"google",
+				"workspace",
+				"sheets",
+				"docs",
+				"slides",
+				"oauth",
+				"connector",
+				"productivity"
+			]
+		},
+		{
+			"name": "impeccable",
+			"source": "./packs/impeccable",
+			"pluginId": "impeccable",
+			"title": "Impeccable",
+			"icon": "packs/impeccable/assets/icon.svg",
+			"description": "Impeccable — design guidance for AI agents: 23 design commands (craft, polish, audit, critique, bolder, quieter, distill…), anti-slop rules, and a deterministic anti-pattern detector",
+			"version": "3.9.1",
+			"author": {
+				"name": "Paul Bakaus (upstream) / Dimension (port)"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "Apache-2.0",
+			"category": "skills",
+			"tags": [
+				"design",
+				"frontend",
+				"impeccable",
+				"polish",
+				"audit",
+				"critique",
+				"anti-slop",
+				"ui",
+				"skill",
+				"detector"
+			]
+		},
+		{
+			"name": "independent-composer",
+			"source": "./packs/independent-composer",
+			"pluginId": "independent-composer",
+			"title": "Independent Composer",
+			"description": "A composer built independently on the bricks tier — Fraym primitives + tokens + the store channels. Ships no shipped-implementation import.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"composer",
+				"independent"
+			]
+		},
+		{
+			"name": "independent-rail",
+			"source": "./packs/independent-rail",
+			"pluginId": "independent-rail",
+			"title": "Independent Rail",
+			"icon": "panel",
+			"description": "Independent session rail assembled from the published PARTS (SessionRail, the rail chrome, and the three assembly hooks) - imports no shipped rail implementation. Speaks the rail slot's specVersion 2 channel contract.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"rail",
+				"independent"
+			]
+		},
+		{
+			"name": "independent-thread",
+			"source": "./packs/independent-thread",
+			"pluginId": "independent-thread",
+			"title": "Independent Thread",
+			"icon": "messageSquare",
+			"description": "Independent thread section assembled from the published PARTS (Thread, SectionSessionScope, PresenceSurface, OpeningThreadSkeleton) — no shipped implementation imported.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"thread",
+				"independent"
+			]
+		},
+		{
+			"name": "last30days",
+			"source": "./packs/last30days",
+			"pluginId": "last30days",
+			"title": "last30days",
+			"icon": "packs/last30days/assets/icon.svg",
+			"description": "last30days — research what people actually said about any topic in the last 30 days across Reddit, X, YouTube, TikTok, Hacker News, and the web",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "skills",
+			"tags": [
+				"research",
+				"trends",
+				"reddit",
+				"x",
+				"youtube",
+				"tiktok",
+				"hackernews",
+				"news",
+				"social",
+				"skill"
+			]
+		},
+		{
+			"name": "mochi-mark",
+			"source": "./packs/mochi-mark",
+			"pluginId": "mochi-mark",
+			"title": "Mochi Mark",
+			"description": "A mark component drawn in a declared slot of a plugin layout — the import-surface FLOOR: react only, zero @fraym/ui.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"mark",
+				"demo",
+				"assembly"
+			]
 		},
 		{
 			"name": "phone",
 			"source": "./packs/phone",
+			"pluginId": "phone",
+			"title": "Phone",
 			"description": "Phone - the Code session surface laid out for a 360-430px phone. The same shared components as Code (Assembled), bound to a layout with no switcher column (phone-switcher mounts in the rail drawer's head). The space Inso Mobile lands in; on a desktop, the honest preview of what a phone sees.",
 			"version": "0.1.0",
 			"author": {
@@ -212,7 +599,6 @@
 				"phone",
 				"mobile"
 			],
-			"pluginId": "phone",
 			"spaces": [
 				{
 					"id": "phone",
@@ -238,523 +624,31 @@
 			]
 		},
 		{
+			"name": "phone-switcher",
+			"source": "./packs/phone-switcher",
+			"pluginId": "phone-switcher",
+			"title": "Phone Switcher",
+			"icon": "layers",
+			"description": "The space switcher as a rail-head menu: re-exports SWITCHER_DROPDOWN from @fraym/ui. For layouts that cannot afford a 56px switcher column — the `phone` layout.",
 			"version": "0.1.0",
 			"author": {
 				"name": "Dimension"
 			},
 			"repository": "https://github.com/insodimension/dimension-marketplace",
 			"license": "MIT",
-			"name": "classic-dock",
-			"source": "./packs/classic-dock",
-			"description": "The shipped dock COLUMN as a pack — tab strip, resize handle, panel body. Fills the `dock-column` contract (a `dock` component is an instrument, i.e. one tab).",
-			"category": "component",
-			"tags": [
-				"component",
-				"dock",
-				"assembly"
-			],
-			"pluginId": "classic-dock"
-		},
-		{
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"name": "classic-workspace",
-			"source": "./packs/classic-workspace",
-			"description": "The shipped workspace host as a pack — the center pane's splits, tiling and overlays. The first marketplace part to ever fill the `workspace` contract.",
-			"category": "component",
-			"tags": [
-				"component",
-				"workspace",
-				"assembly"
-			],
-			"pluginId": "classic-workspace"
-		},
-		{
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"name": "classic-switcher",
-			"source": "./packs/classic-switcher",
-			"description": "The shipped switcher rail as a pack — the far-left column of space marks.",
 			"category": "component",
 			"tags": [
 				"component",
 				"switcher",
-				"assembly"
-			],
-			"pluginId": "classic-switcher"
-		},
-		{
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"name": "classic-start",
-			"source": "./packs/classic-start",
-			"description": "The shipped START SURFACE as a pack — the session surface's front door: hero composer, Project · Work strip, popover menus. Fills the `start` contract (a SECTION like `thread`/`composer`, resolved inside the session surface). The hero sentence comes from the space's `workspace.startCopy`, never from the kit.",
-			"category": "component",
-			"tags": [
-				"component",
-				"start",
-				"assembly"
-			],
-			"pluginId": "classic-start"
-		},
-		{
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"name": "independent-composer",
-			"source": "./packs/independent-composer",
-			"description": "A composer built independently on the bricks tier — Fraym primitives + tokens + the store channels. Ships no shipped-implementation import.",
-			"category": "component",
-			"tags": [
-				"component",
-				"composer",
-				"independent"
-			],
-			"pluginId": "independent-composer"
-		},
-		{
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"name": "independent-thread",
-			"source": "./packs/independent-thread",
-			"description": "Independent thread section assembled from the published PARTS (Thread, SectionSessionScope, PresenceSurface, OpeningThreadSkeleton) — no shipped implementation imported.",
-			"category": "component",
-			"tags": [
-				"component",
-				"thread",
-				"independent"
-			],
-			"pluginId": "independent-thread"
-		},
-		{
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"name": "independent-rail",
-			"source": "./packs/independent-rail",
-			"description": "Independent session rail assembled from the published PARTS (SessionRail, the rail chrome, and the three assembly hooks) - imports no shipped rail implementation. Speaks the rail slot's specVersion 2 channel contract.",
-			"category": "component",
-			"tags": [
-				"component",
-				"rail",
-				"independent"
-			],
-			"pluginId": "independent-rail"
-		},
-		{
-			"name": "discord",
-			"source": "./packs/discord",
-			"description": "Discord connector — list servers/channels, read and send messages via a bot token",
-			"version": "0.1.2",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"discord",
-				"chat",
-				"bot",
-				"messaging",
-				"connector"
-			],
-			"pluginId": "discord"
-		},
-		{
-			"name": "github",
-			"source": "./packs/github",
-			"description": "GitHub connector — issues, PRs, releases, repos, and search via the gh CLI",
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"github",
-				"git",
-				"gh",
-				"issues",
-				"pull-requests",
-				"releases",
-				"connector"
-			],
-			"pluginId": "github"
-		},
-		{
-			"name": "gmail",
-			"source": "./packs/gmail",
-			"description": "Email connector — read/search/compose/reply over IMAP/SMTP via himalaya",
-			"version": "0.1.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"email",
-				"gmail",
-				"imap",
-				"smtp",
-				"himalaya",
-				"connector"
-			],
-			"pluginId": "gmail"
-		},
-		{
-			"name": "google-calendar",
-			"source": "./packs/google-calendar",
-			"description": "Manage Google Calendar events and schedules",
-			"version": "0.1.2",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"google-calendar",
-				"calendar",
-				"agenda",
-				"daily-brief",
-				"scheduling",
-				"productivity"
-			],
-			"pluginId": "google-calendar"
-		},
-		{
-			"name": "google-drive",
-			"source": "./packs/google-drive",
-			"description": "Google Drive connector — list/search/read files via OAuth",
-			"version": "0.1.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"google",
-				"drive",
-				"oauth",
-				"files",
-				"connector"
-			],
-			"pluginId": "google-drive"
-		},
-		{
-			"name": "google-meet",
-			"source": "./packs/google-meet",
-			"description": "Create Google Meet spaces, read conference records/recordings/transcripts, and live-transcribe a call",
-			"version": "0.1.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"google-meet",
-				"meet",
-				"meetings",
-				"transcription",
-				"conference-records",
-				"recordings",
-				"productivity"
-			],
-			"pluginId": "google-meet"
-		},
-		{
-			"name": "google-workspace",
-			"source": "./packs/google-workspace",
-			"description": "Google Workspace connector — read/write Sheets, Docs, and Slides via OAuth",
-			"version": "0.1.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"google",
-				"workspace",
-				"sheets",
-				"docs",
-				"slides",
-				"oauth",
-				"connector",
-				"productivity"
-			],
-			"pluginId": "google-workspace"
-		},
-		{
-			"name": "reddit",
-			"source": "./packs/reddit",
-			"description": "Reddit connector — feeds, posts, comments, search, submit, vote, and inbox via the Reddit OAuth API",
-			"version": "0.1.2",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"reddit",
-				"social",
-				"forum",
-				"news",
-				"connector"
-			],
-			"pluginId": "reddit"
-		},
-		{
-			"name": "slack",
-			"source": "./packs/slack",
-			"description": "Slack connector — list channels, read messages, and post via the Slack Web API",
-			"version": "0.1.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"slack",
-				"chat",
-				"messaging",
-				"webhook",
-				"connector"
-			],
-			"pluginId": "slack"
-		},
-		{
-			"name": "teams",
-			"source": "./packs/teams",
-			"description": "Microsoft Teams connector — list teams/channels and post channel messages via Microsoft Graph",
-			"version": "0.1.2",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"microsoft",
-				"teams",
-				"graph",
-				"azure",
-				"channel",
-				"connector"
-			],
-			"pluginId": "teams"
-		},
-		{
-			"name": "telegram",
-			"source": "./packs/telegram",
-			"description": "Telegram connector — send messages, read updates, inspect chats via the Bot API",
-			"version": "0.1.2",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"telegram",
-				"bot",
-				"messaging",
-				"chat",
-				"connector"
-			],
-			"pluginId": "telegram"
-		},
-		{
-			"name": "watch",
-			"source": "./packs/watch",
-			"description": "Watch a video by URL or local path: ffmpeg frame sampling plus a timestamped transcript (captions, local Whisper, or a consent-gated cloud API)",
-			"version": "0.2.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"video",
-				"youtube",
-				"transcription",
-				"multimodal",
-				"ffmpeg",
-				"yt-dlp",
-				"connector"
-			],
-			"pluginId": "watch"
-		},
-		{
-			"name": "whatsapp",
-			"source": "./packs/whatsapp",
-			"description": "WhatsApp connector — send text messages and templates via the Meta WhatsApp Cloud API",
-			"version": "0.1.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"whatsapp",
-				"meta",
-				"messaging",
-				"cloud-api",
-				"connector"
-			],
-			"pluginId": "whatsapp"
-		},
-		{
-			"name": "x",
-			"source": "./packs/x",
-			"description": "X (Twitter) connector — mentions, timelines, search, threads, and posting via the official X API v2",
-			"version": "0.2.3",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"x",
-				"twitter",
-				"social",
-				"posts",
-				"mentions",
-				"connector"
-			],
-			"pluginId": "x"
-		},
-		{
-			"name": "youtube",
-			"source": "./packs/youtube",
-			"description": "Search YouTube, inspect videos and channels, manage playlists, and read/post comments",
-			"version": "0.1.2",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "connector",
-			"tags": [
-				"youtube",
-				"video",
-				"channel",
-				"playlist",
-				"comments",
-				"media"
-			],
-			"pluginId": "youtube"
-		},
-		{
-			"name": "agents-best-practices",
-			"source": "./packs/agents-best-practices",
-			"description": "Agents Best Practices — provider-neutral agent-harness architecture: loops, tools, permissions, planning, memory, compaction, evals, safety",
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "skills",
-			"tags": [
-				"agents",
-				"harness",
-				"architecture",
-				"tools",
-				"mcp",
-				"evals",
-				"prompt-caching",
-				"memory",
-				"compaction",
-				"skill"
-			],
-			"pluginId": "agents-best-practices"
-		},
-		{
-			"name": "impeccable",
-			"source": "./packs/impeccable",
-			"description": "Impeccable — design guidance for AI agents: 23 design commands (craft, polish, audit, critique, bolder, quieter, distill…), anti-slop rules, and a deterministic anti-pattern detector",
-			"version": "3.9.1",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "Apache-2.0",
-			"category": "skills",
-			"tags": [
-				"design",
-				"frontend",
-				"impeccable",
-				"polish",
-				"audit",
-				"critique",
-				"anti-slop",
-				"ui",
-				"skill",
-				"detector"
-			],
-			"pluginId": "impeccable"
-		},
-		{
-			"name": "last30days",
-			"source": "./packs/last30days",
-			"description": "last30days — research what people actually said about any topic in the last 30 days across Reddit, X, YouTube, TikTok, Hacker News, and the web",
-			"version": "0.1.0",
-			"author": {
-				"name": "Dimension"
-			},
-			"repository": "https://github.com/insodimension/dimension-marketplace",
-			"license": "MIT",
-			"category": "skills",
-			"tags": [
-				"research",
-				"trends",
-				"reddit",
-				"x",
-				"youtube",
-				"tiktok",
-				"hackernews",
-				"news",
-				"social",
-				"skill"
-			],
-			"pluginId": "last30days"
+				"phone"
+			]
 		},
 		{
 			"name": "product-psychology",
 			"source": "./packs/product-psychology",
+			"pluginId": "product-psychology",
+			"title": "Product Psychology",
+			"icon": "packs/product-psychology/assets/icon.svg",
 			"description": "Product Psychology — audit conversion & comprehension, map remembered journeys, research users, and ethics-gate persuasion",
 			"version": "0.1.1",
 			"author": {
@@ -774,12 +668,99 @@
 				"empathy",
 				"design",
 				"skill"
-			],
-			"pluginId": "product-psychology"
+			]
+		},
+		{
+			"name": "pulse-mark",
+			"source": "./packs/pulse-mark",
+			"pluginId": "pulse-mark",
+			"title": "Pulse Mark",
+			"description": "The Store's demo component: a mark with zero Fraym UI reading `sessions/list` through the one granted binding, selector-gated to a single boolean — the zero-import tier demonstrated.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"mark",
+				"demo",
+				"store"
+			]
+		},
+		{
+			"name": "reddit",
+			"source": "./packs/reddit",
+			"pluginId": "reddit",
+			"title": "Reddit",
+			"icon": "packs/reddit/assets/icon.svg",
+			"description": "Reddit connector — feeds, posts, comments, search, submit, vote, and inbox via the Reddit OAuth API",
+			"version": "0.1.2",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"reddit",
+				"social",
+				"forum",
+				"news",
+				"connector"
+			]
+		},
+		{
+			"name": "session-board",
+			"source": "./packs/session-board",
+			"pluginId": "session-board",
+			"title": "Sessions",
+			"icon": "layers",
+			"description": "Sessions - mission control in the dock: every session partitioned by urgency (needs you / working / idle), one-click switching. The first contributed dock component (\"type\": \"component\", \"slot\": \"dock\"), at the zero-import floor.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "component",
+			"tags": [
+				"component",
+				"dock",
+				"sessions",
+				"store"
+			]
+		},
+		{
+			"name": "slack",
+			"source": "./packs/slack",
+			"pluginId": "slack",
+			"title": "Slack",
+			"icon": "packs/slack/assets/icon.svg",
+			"description": "Slack connector — list channels, read messages, and post via the Slack Web API",
+			"version": "0.1.1",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"slack",
+				"chat",
+				"messaging",
+				"webhook",
+				"connector"
+			]
 		},
 		{
 			"name": "taste",
 			"source": "./packs/taste",
+			"pluginId": "taste",
+			"title": "Taste",
+			"icon": "packs/taste/assets/icon.svg",
 			"description": "Taste — anti-slop frontend skill: brief-first design reads, real design systems, no templated AI aesthetics",
 			"version": "0.1.0",
 			"author": {
@@ -798,12 +779,92 @@
 				"redesign",
 				"ui",
 				"skill"
+			]
+		},
+		{
+			"name": "teams",
+			"source": "./packs/teams",
+			"pluginId": "teams",
+			"title": "Microsoft Teams",
+			"icon": "packs/teams/assets/icon.svg",
+			"description": "Microsoft Teams connector — list teams/channels and post channel messages via Microsoft Graph",
+			"version": "0.1.2",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"microsoft",
+				"teams",
+				"graph",
+				"azure",
+				"channel",
+				"connector"
+			]
+		},
+		{
+			"name": "telegram",
+			"source": "./packs/telegram",
+			"pluginId": "telegram",
+			"title": "Telegram",
+			"icon": "packs/telegram/assets/icon.svg",
+			"description": "Telegram connector — send messages, read updates, inspect chats via the Bot API",
+			"version": "0.1.2",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"telegram",
+				"bot",
+				"messaging",
+				"chat",
+				"connector"
+			]
+		},
+		{
+			"name": "three-lane",
+			"source": "./packs/three-lane",
+			"pluginId": "three-lane",
+			"title": "Three Lane",
+			"description": "A layout that declares its OWN slots (lane-left / lane-main / lane-dock / badge) and ships Demo Lane — the assembly-spine thesis demo: a space assembled from three plugins nobody hand-wired together.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "layout",
+			"tags": [
+				"layout",
+				"space",
+				"demo",
+				"assembly"
 			],
-			"pluginId": "taste"
+			"spaces": [
+				{
+					"id": "demo-lane",
+					"label": "Demo Lane",
+					"tagline": "The assembly-spine thesis demo: a space assembled from parts nobody in this repo hand-wired — this plugin's own layout, another plugin's mark in the badge slot, and a third plugin's rail (classic-rail) filling the left lane. Its session surface takes the host's own sections; a contributed thread once filled them and the pack that did is gone, so the description no longer promises one.",
+					"icon": "layers",
+					"accent": "#f2a3c2",
+					"requires": [
+						"mochi-mark",
+						"classic-rail"
+					]
+				}
+			]
 		},
 		{
 			"name": "ui-skills",
 			"source": "./packs/ui-skills",
+			"pluginId": "ui-skills",
+			"title": "UI Skills",
+			"icon": "packs/ui-skills/assets/icon.svg",
 			"description": "UI Skills — opinionated interface-polish skills: baseline UI discipline, accessibility fixes, metadata audits, motion performance",
 			"version": "0.1.0",
 			"author": {
@@ -824,69 +885,99 @@
 				"tailwind",
 				"polish",
 				"skill"
-			],
-			"pluginId": "ui-skills"
+			]
 		},
 		{
-			"name": "artifactory-threejs",
-			"source": "./packs/artifactory-threejs",
-			"description": "Three.js scenes as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified, hosted by the Dimension engine and rendered in the artifact-view seat. The Phase 4 pilot: zero code of its own, just packaging.",
-			"version": "0.1.0",
+			"name": "watch",
+			"source": "./packs/watch",
+			"pluginId": "watch",
+			"title": "Watch",
+			"icon": "packs/watch/assets/icon.svg",
+			"description": "Watch a video by URL or local path: ffmpeg frame sampling plus a timestamped transcript (captions, local Whisper, or a consent-gated cloud API)",
+			"version": "0.2.1",
 			"author": {
 				"name": "Dimension"
 			},
 			"repository": "https://github.com/insodimension/dimension-marketplace",
 			"license": "MIT",
-			"category": "component",
+			"category": "connector",
 			"tags": [
-				"artifactory",
-				"mcp-apps",
-				"three.js",
-				"3d",
-				"example"
-			],
-			"pluginId": "artifactory-threejs"
+				"video",
+				"youtube",
+				"transcription",
+				"multimodal",
+				"ffmpeg",
+				"yt-dlp",
+				"connector"
+			]
 		},
 		{
-			"name": "artifactory-system-monitor",
-			"source": "./packs/artifactory-system-monitor",
-			"description": "System Monitor as an MCP App — the reference server from modelcontextprotocol/ext-apps, unmodified. A model-facing tool plus an app-only tool the View polls through the consent gate: the second Phase 4 pilot.",
-			"version": "0.1.0",
+			"name": "whatsapp",
+			"source": "./packs/whatsapp",
+			"pluginId": "whatsapp",
+			"title": "WhatsApp",
+			"icon": "packs/whatsapp/assets/icon.svg",
+			"description": "WhatsApp connector — send text messages and templates via the Meta WhatsApp Cloud API",
+			"version": "0.1.1",
 			"author": {
 				"name": "Dimension"
 			},
 			"repository": "https://github.com/insodimension/dimension-marketplace",
 			"license": "MIT",
-			"category": "component",
+			"category": "connector",
 			"tags": [
-				"artifactory",
-				"mcp-apps",
-				"system",
-				"monitor",
-				"example"
-			],
-			"pluginId": "artifactory-system-monitor"
+				"whatsapp",
+				"meta",
+				"messaging",
+				"cloud-api",
+				"connector"
+			]
 		},
 		{
-			"name": "artifactory-desk",
-			"source": "./packs/artifactory-desk",
-			"description": "Desk — a layout whose artifact-view seat is filled at boot by a declared MCP App (the System Monitor pilot); the Phase 4 slice D proof that a space can seat an App with no agent turn.",
-			"version": "0.1.0",
+			"name": "x",
+			"source": "./packs/x",
+			"pluginId": "x",
+			"title": "X",
+			"icon": "packs/x/assets/icon.svg",
+			"description": "X (Twitter) connector — mentions, timelines, search, threads, and posting via the official X API v2",
+			"version": "0.2.3",
 			"author": {
 				"name": "Dimension"
 			},
 			"repository": "https://github.com/insodimension/dimension-marketplace",
 			"license": "MIT",
-			"category": "layout",
+			"category": "connector",
 			"tags": [
-				"layout",
-				"space",
-				"artifactory",
-				"mcp-apps",
-				"pin",
-				"demo"
-			],
-			"pluginId": "artifactory-desk"
+				"x",
+				"twitter",
+				"social",
+				"posts",
+				"mentions",
+				"connector"
+			]
+		},
+		{
+			"name": "youtube",
+			"source": "./packs/youtube",
+			"pluginId": "youtube",
+			"title": "YouTube",
+			"icon": "packs/youtube/assets/icon.svg",
+			"description": "Search YouTube, inspect videos and channels, manage playlists, and read/post comments",
+			"version": "0.1.2",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "connector",
+			"tags": [
+				"youtube",
+				"video",
+				"channel",
+				"playlist",
+				"comments",
+				"media"
+			]
 		}
 	]
 }

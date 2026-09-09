@@ -7,7 +7,7 @@
 	"main": "./src/index.tsx",
 	"dimension": {
 		"name": "independent-rail",
-		"description": "Independent session rail built on the parts tier.",
+		"description": "Independent session rail assembled from the published PARTS (SessionRail, the rail chrome, and the three assembly hooks) - imports no shipped rail implementation. Speaks the rail slot's specVersion 2 channel contract.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

@@ -7,7 +7,7 @@
 	"main": "./src/index.tsx",
 	"dimension": {
 		"name": "independent-thread",
-		"description": "Independent thread built on the parts tier.",
+		"description": "Independent thread section assembled from the published PARTS (Thread, SectionSessionScope, PresenceSurface, OpeningThreadSkeleton) — no shipped implementation imported.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [
