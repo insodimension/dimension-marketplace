@@ -32,7 +32,8 @@ packs/
                   The second artifactory pilot: an app-only tool the model never
                   sees, called from the View through the engine's consent gate.
 .dimension-plugin/
-  marketplace.json  The catalog Dimension's plugin system reads.
+  marketplace.json  The catalog Dimension's plugin system reads — GENERATED
+                    from the packs by `scripts/build-index.ts` (see below).
 ```
 
 Each pack declares itself in ONE file — `dimension.plugin.json` — validated by
@@ -63,10 +64,47 @@ lives in the Dimension repository: `docs/guides/building-a-custom-space.md`.
    conformance suite (`mountForTest` + per-slot fixtures from `@fraym/ui`).
    For a section that claims parity with a shipped surface, the gate is a live
    structural + behavioral comparison against it, not a self-written test.
-4. Open a PR adding your pack under `packs/` plus a catalog entry in
-   `.dimension-plugin/marketplace.json`. Review + green gates = merged = published.
+4. Open a PR adding your pack under `packs/`, then run `bun scripts/build-index.ts`
+   to regenerate the catalog and commit it too. Review + green gates = merged =
+   published.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## The catalog is generated, and it is all a client fetches
+
+`.dimension-plugin/marketplace.json` is a **derived index** — never hand-edited.
+`bun scripts/build-index.ts` walks `packs/*/` and writes one entry per pack from
+that pack's own files (`package.json` for version/description/author/license/
+category/tags, `dimension.plugin.json` for `pluginId`/`title`/`icon`/`requires`
+and the `spaces[]` listings, with asset paths rewritten catalog-root-relative).
+It writes the same bytes to `.omp-plugin/marketplace.json`, the read path every
+Dimension built before oh-my-pi #158 uses. `bun scripts/build-index.ts --check`
+is a CI gate: a pack edited without regenerating fails the build, so the shelf
+always describes the packs that are actually committed. Want different card
+copy? Edit the pack, not the index.
+
+This is what makes browsing cheap: a client fetches the **index only** — KBs at
+any pack count — and paints every card from it (title, icon, version, screenshots,
+the minimum Dimension the pack needs). The pack tree is fetched only for the one
+pack someone installs. Nobody clones the mall.
+
+### `requires.dimension`
+
+A pack that needs a platform capability declares the minimum Dimension it runs
+on, top-level in its `dimension.plugin.json`:
+
+```json
+{ "plugin": "build", "requires": { "dimension": ">=0.9.89" } }
+```
+
+The generator lifts it into the pack's catalog entry, so the Store can say
+"Requires Dimension ≥ 0.9.89 — update Dimension" on a card **before** anything is
+downloaded, and the engine refuses install/load when the host is older. The value
+is any semver range; it is matched against the Dimension PRODUCT version by the
+engine and the plugin manager (`Bun.semver.satisfies`) — never by the UI. A host
+whose version is unknown is never gated. Omit the field when your pack has no
+floor; `packs/build` is the worked example (it needs the specVersion-2 rail
+channel, which ships in 0.9.89+).
 
 ## Status and honesty
 

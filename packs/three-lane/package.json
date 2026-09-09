@@ -9,7 +9,7 @@
 	"private": true,
 	"dimension": {
 		"name": "three-lane",
-		"description": "Three Lane — a demo layout declaring its own slots, plus the Demo Lane space that assembles on it.",
+		"description": "A layout that declares its OWN slots (lane-left / lane-main / lane-dock / badge) and ships Demo Lane — the assembly-spine thesis demo: a space assembled from three plugins nobody hand-wired together.",
 		"defaultEnabled": true,
 		"category": "layout",
 		"keywords": ["layout", "space", "demo", "assembly"]

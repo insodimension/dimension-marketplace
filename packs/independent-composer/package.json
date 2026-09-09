@@ -7,7 +7,7 @@
 	"main": "./src/index.ts",
 	"dimension": {
 		"name": "independent-composer",
-		"description": "Independent composer built on the bricks tier.",
+		"description": "A composer built independently on the bricks tier — Fraym primitives + tokens + the store channels. Ships no shipped-implementation import.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

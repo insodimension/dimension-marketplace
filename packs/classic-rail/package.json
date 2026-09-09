@@ -21,7 +21,7 @@
 	],
 	"dimension": {
 		"name": "classic-rail",
-		"description": "Classic Rail - the shipped the session rail, installable.",
+		"description": "The shipped session rail, installable: re-exports RAIL_CLASSIC from @fraym/ui - project grouping, rail actions, search, the full row model.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

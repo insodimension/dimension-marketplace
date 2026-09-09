@@ -1,7 +1,11 @@
 // Standalone catalog validator - no dependencies, runs on bare node/bun.
 // The monorepo runs each pack's tests; THIS repo's CI can only see itself,
 // so it validates what is checkable standalone: the catalog and pack layout.
+//
+// `--check` additionally runs the index generator's drift gate, which is a
+// TypeScript file — that mode needs bun (plain node runs every other check).
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -18,9 +22,24 @@ const catalog = JSON.parse(catalogRaw);
 // catalogs disagree serves two different marketplaces depending on the client's
 // build date, which is worse than either being wrong on its own.
 if (!existsSync(legacyCatalogPath)) {
-	errors.push(".omp-plugin/marketplace.json is missing — pre-#158 clients read only that path (run scripts/sync-catalog.mjs)");
+	errors.push(".omp-plugin/marketplace.json is missing — pre-#158 clients read only that path (run scripts/build-index.ts)");
 } else if (readFileSync(legacyCatalogPath, "utf8") !== catalogRaw) {
-	errors.push(".omp-plugin/marketplace.json differs from .dimension-plugin/marketplace.json (run scripts/sync-catalog.mjs)");
+	errors.push(".omp-plugin/marketplace.json differs from .dimension-plugin/marketplace.json (run scripts/build-index.ts)");
+}
+
+// The catalog is a DERIVED index (scripts/build-index.ts): every field of every
+// entry comes off the pack's own files, so a catalog that does not match the
+// packs on disk is a bug no per-field check can see. `--check` here delegates
+// to the generator's own check rather than reimplementing the projection —
+// two implementations of "what the index should be" is exactly the drift this
+// gate exists to refuse.
+if (process.argv.includes("--check")) {
+	// Spawn bun BY NAME, never process.execPath: under node that is node, which
+	// cannot run a .ts file, and the resulting non-zero exit read as "DRIFTED" —
+	// a false failure naming the wrong cause. No bun on PATH is its own error.
+	const check = spawnSync("bun", [join(root, "scripts", "build-index.ts"), "--check"], { stdio: "inherit" });
+	if (check.error) errors.push(`--check needs bun on PATH to run scripts/build-index.ts (${check.error.message})`);
+	else if (check.status !== 0) errors.push("the catalog has DRIFTED from the packs on disk (run scripts/build-index.ts)");
 }
 
 if (typeof catalog.name !== "string" || !/^[a-z0-9-]+$/.test(catalog.name)) {
@@ -86,6 +105,57 @@ for (const plugin of catalog.plugins ?? []) {
 	}
 	if (typeof plugin.license !== "string" || plugin.license.length === 0) {
 		errors.push(`plugin "${label}": license is required`);
+	}
+	// Browse fields: the store paints a card from the INDEX alone, so an entry
+	// whose title or icon is the wrong TYPE breaks a card for a pack nobody has
+	// installed — the one case no runtime read of the pack tree can catch.
+	if (plugin.title !== undefined && (typeof plugin.title !== "string" || plugin.title.length === 0)) {
+		errors.push(`plugin "${label}": title must be a non-empty string`);
+	}
+	if (plugin.icon !== undefined && (typeof plugin.icon !== "string" || plugin.icon.length === 0)) {
+		errors.push(`plugin "${label}": icon must be a non-empty string (a catalog-root-relative asset path or a glyph name)`);
+	}
+	// `requires.dimension` gates INSTALL in the engine and the OMP manager, both
+	// of which match it with `Bun.semver.satisfies` — the one field here that
+	// decides whether a pack may be installed at all, so a range that does not
+	// mean what its author thinks must fail HERE, where it can still be fixed.
+	//
+	// Two checks, because one is not enough: `Bun.semver.satisfies` never THROWS
+	// (measured on bun 1.x: `satisfies("0.0.0", "not a range")` returns TRUE),
+	// so an unparseable range does not crash the gate — it silently opens it for
+	// every host version. The token check is therefore the real gate, and the
+	// call is kept because "the engine's matcher does not throw on it" is part
+	// of what this field promises.
+	if (plugin.requires !== undefined) {
+		if (typeof plugin.requires !== "object" || plugin.requires === null || Array.isArray(plugin.requires)) {
+			errors.push(`plugin "${label}": requires must be an object (e.g. { "dimension": ">=0.9.89" })`);
+		} else if (plugin.requires.dimension !== undefined) {
+			const range = plugin.requires.dimension;
+			if (typeof range !== "string" || range.length === 0) {
+				errors.push(`plugin "${label}": requires.dimension must be a non-empty semver range string`);
+			} else {
+				// A comparator set: whitespace-separated tokens, `||` alternatives,
+				// and the hyphen-range separator. Each token is an optional operator
+				// plus a full or partial version (`>=0.9.89`, `^1.2`, `1.x`, `*`).
+				const tokens = range.split(/\s+/).filter(token => token.length > 0 && token !== "||" && token !== "-");
+				const malformed = tokens.filter(
+					token => !/^(?:\*|[xX]|(?:[<>]=?|=|~|\^|v)?\d+(?:\.(?:\d+|[xX*]))?(?:\.(?:\d+|[xX*]))?(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)$/.test(token),
+				);
+				if (tokens.length === 0 || malformed.length > 0) {
+					errors.push(
+						`plugin "${label}": requires.dimension "${range}" is not a semver range (unrecognized: ${malformed.join(", ") || "<empty>"})`,
+					);
+				} else if (typeof Bun !== "undefined") {
+					try {
+						Bun.semver.satisfies("0.0.0", range);
+					} catch (error) {
+						errors.push(
+							`plugin "${label}": requires.dimension "${range}" cannot be matched by the engine's semver (${error instanceof Error ? error.message : String(error)})`,
+						);
+					}
+				}
+			}
+		}
 	}
 }
 

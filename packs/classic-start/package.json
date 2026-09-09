@@ -18,7 +18,7 @@
 	},
 	"dimension": {
 		"name": "classic-start",
-		"description": "Classic Start - the shipped start surface (hero composer, project/work strip, menus), installable.",
+		"description": "The shipped START SURFACE as a pack — the session surface's front door: hero composer, Project · Work strip, popover menus. Fills the `start` contract (a SECTION like `thread`/`composer`, resolved inside the session surface). The hero sentence comes from the space's `workspace.startCopy`, never from the kit.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [
