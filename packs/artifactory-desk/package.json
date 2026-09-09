@@ -1,0 +1,24 @@
+{
+	"name": "@dimension/artifactory-desk",
+	"author": "Dimension",
+	"version": "0.1.0",
+	"description": "Desk — a LAYOUT plugin whose artifact-view seat is filled at boot by a declared MCP App (doc 45 §8, Phase 4 slice D). Topology plus one pin; no code.",
+	"type": "module",
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+	"private": true,
+	"dimension": {
+		"name": "artifactory-desk",
+		"description": "Desk — a layout that seats the System Monitor App at boot, plus the Desk space that assembles on it.",
+		"defaultEnabled": false,
+		"category": "layout",
+		"keywords": [
+			"layout",
+			"space",
+			"artifactory",
+			"mcp-apps",
+			"pin",
+			"demo"
+		]
+	}
+}

@@ -36,6 +36,42 @@
 			]
 		},
 		{
+			"name": "artifactory-desk",
+			"source": "./packs/artifactory-desk",
+			"pluginId": "artifactory-desk",
+			"title": "Desk",
+			"description": "Desk — a layout that seats the System Monitor App at boot, plus the Desk space that assembles on it.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "layout",
+			"tags": [
+				"layout",
+				"space",
+				"artifactory",
+				"mcp-apps",
+				"pin",
+				"demo"
+			],
+			"spaces": [
+				{
+					"id": "desk",
+					"label": "Desk",
+					"tagline": "The slice D proof: a space whose layout PINS an MCP App into its artifact-view seat. Opening a session here mounts the System Monitor View with no agent turn — the host calls the tool the layout declared. Close the tab and it stays closed; reload the window and every live View comes back from the engine's own list.",
+					"icon": "monitor",
+					"accent": "#8fd3b6",
+					"requires": [
+						"mochi-mark",
+						"classic-rail",
+						"artifactory-system-monitor"
+					]
+				}
+			]
+		},
+		{
 			"name": "artifactory-system-monitor",
 			"source": "./packs/artifactory-system-monitor",
 			"pluginId": "artifactory-system-monitor",
