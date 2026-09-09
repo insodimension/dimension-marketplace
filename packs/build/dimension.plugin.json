@@ -3,6 +3,9 @@
 	"contractVersion": 1,
 	"title": "Build",
 	"type": "layout",
+	"requires": {
+		"dimension": ">=0.9.89"
+	},
 	"slots": [
 		{
 			"id": "ca-switcher",

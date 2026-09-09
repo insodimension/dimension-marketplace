@@ -23,7 +23,7 @@
 	],
 	"dimension": {
 		"name": "session-board",
-		"description": "Sessions - mission control in the dock: blocked / working / idle, one-click switching. The first contributed dock component.",
+		"description": "Sessions - mission control in the dock: every session partitioned by urgency (needs you / working / idle), one-click switching. The first contributed dock component (\"type\": \"component\", \"slot\": \"dock\"), at the zero-import floor.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [

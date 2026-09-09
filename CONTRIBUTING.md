@@ -28,11 +28,49 @@ review is the taste check.** No pack merges red.
    live structural + behavioral comparison against that surface — the portable
    template ships no test directory precisely because its gate is that
    comparison, not a self-written assertion.
-5. **Add your catalog entry** to `.dimension-plugin/marketplace.json`: name, source
-   (`./packs/<your-pack>`), description, version, author, license, category.
-6. **Open the PR.** CI validates the catalog and pack layout; the monorepo CI
-   runs your tests; a maintainer reviews for craft (design-token discipline,
-   honest empty states, reduced-motion safety).
+5. **Regenerate the catalog.** You do NOT hand-write your entry:
+   `.dimension-plugin/marketplace.json` is generated from the packs on disk.
+
+   ```sh
+   bun scripts/build-index.ts
+   ```
+
+   It writes one entry per `packs/*/` from that pack's own files, and writes the
+   same bytes to `.omp-plugin/marketplace.json` (the path pre-#158 clients read).
+   Commit both. CI runs `bun scripts/build-index.ts --check` and **refuses
+   drift**, so a pack edited without regenerating fails the build. Wrong copy on
+   your card? Fix the pack, not the index:
+
+   | Catalog field | Comes from |
+   |---|---|
+   | `name` · `source` | your pack's directory name |
+   | `pluginId` · `title` · `icon` · `requires` · `spaces` | `dimension.plugin.json` |
+   | `description` · `category` · `tags` | `package.json` → `dimension` block (`description`, `category`, `keywords`), else its top-level fields |
+   | `version` · `author` · `license` · `repository` | `package.json` (license/repository default to this repo's) |
+
+   `icon` and every `spaces[].screenshots` entry is rewritten
+   catalog-root-relative (`assets/icon.svg` → `packs/<you>/assets/icon.svg`) and
+   must exist — a screenshot you deleted fails the generator by name. A bare
+   glyph name (`"icon": "hammer"`) is passed through untouched.
+6. **Declare a platform floor if you need one.** A pack that requires a recent
+   Dimension says so top-level in `dimension.plugin.json`:
+
+   ```json
+   { "requires": { "dimension": ">=0.9.89" } }
+   ```
+
+   The generator lifts it into your catalog entry, so the Store gates your card
+   ("Requires Dimension ≥ X — update Dimension") and the engine refuses install
+   and load on an older host — matched against the Dimension PRODUCT version with
+   `Bun.semver.satisfies`, never parsed by the UI. Omit it when your pack has no
+   floor; an unparseable range fails validation.
+7. **Open the PR.** CI validates the catalog and pack layout and refuses index
+   drift; the monorepo CI runs your tests; a maintainer reviews for craft
+   (design-token discipline, honest empty states, reduced-motion safety).
+
+Browsing this shelf costs ONE fetch: a client reads the index and paints every
+card from it, then downloads only the pack it installs. That is why every browse
+fact has to live in the index — and why the index has to be generated.
 
 ## Your first space
 
@@ -50,8 +88,10 @@ review is the taste check.** No pack merges red.
 2. **Copy a template.** `packs/three-lane` is the LAYOUT template (it declares
    its own slots and ships the `demo-lane` space); `packs/mochi-mark` is the
    COMPONENT template (it fills one slot). A copy must edit, at minimum:
-   - `package.json` — `name`, `description`, and the `omp` block (`name`,
-     `description`, `category`, `keywords`).
+   - `package.json` — `name`, `description`, and the `dimension` block (`name`,
+     `description`, `category`, `keywords`); it is what the generated catalog
+     entry quotes, so this copy is your store copy (`omp` is the pre-rename
+     spelling of the same block and is still read).
    - `dimension.plugin.json` — see below.
    - `src/index.ts` — for a component its **default** export is what the host
      loads as the component; `mochi-mark/src/index.ts` says so in a comment.
@@ -70,16 +110,16 @@ review is the taste check.** No pack merges red.
      id), `rail`, `workspace` (`surfaces`, `start`, `session`,
      `switchPolicy`), `generalAgents`, and `requires.plugins` — every plugin
      your space names in `components` or `mark.fill` belongs in that list.
-4. **Validate before you push.**
+4. **Regenerate and validate before you push.**
 
    ```sh
-   node scripts/validate-marketplace.mjs
-   node scripts/sync-catalog.mjs --check
+   bun scripts/build-index.ts
+   bun scripts/validate-marketplace.mjs --check
    ```
 
-   The first checks the catalog and pack layout; the second fails if a pack
-   manifest changed without the catalog being resynced (plain
-   `node scripts/sync-catalog.mjs` rewrites it). Both must be green.
+   The first rewrites the index from the packs on disk (both catalog paths); the
+   second checks the catalog and pack layout and refuses index drift — exactly
+   what CI runs. Both must be green.
 5. **Open the PR.** One pack per PR, against `main`. CI reruns both scripts;
    a maintainer reviews against the house rules below.
 
@@ -93,5 +133,7 @@ review is the taste check.** No pack merges red.
 
 ## Licensing
 
-Each pack declares its own `license` in its `package.json` and catalog entry.
-The marketplace catalog itself is metadata.
+Each pack declares its own `license` in its `package.json`; the generated
+catalog entry quotes it, defaulting to this repository's MIT when a pack states
+none. A vendored pack keeps its upstream license (`packs/impeccable` is
+Apache-2.0). The marketplace catalog itself is metadata.

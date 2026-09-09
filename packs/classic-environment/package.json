@@ -21,7 +21,7 @@
 	],
 	"dimension": {
 		"name": "classic-environment",
-		"description": "Classic Environment - the shipped the environment card, installable.",
+		"description": "The shipped environment card, installable: re-exports ENVIRONMENT_CLASSIC from @fraym/ui - live SCM scan, submodule pins, worktree verbs, Push.",
 		"defaultEnabled": true,
 		"category": "component",
 		"keywords": [
