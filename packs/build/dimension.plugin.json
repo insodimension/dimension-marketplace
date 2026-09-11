@@ -4,7 +4,7 @@
 	"title": "Build",
 	"type": "layout",
 	"requires": {
-		"dimension": ">=0.9.89"
+		"dimension": ">=0.10.4"
 	},
 	"slots": [
 		{
@@ -115,7 +115,8 @@
 					"board",
 					"analytics",
 					"workbench",
-					"session-tools"
+					"session-tools",
+					"aether-chat"
 				]
 			},
 			"widgets": {
@@ -124,6 +125,10 @@
 						"fill": "classic-environment",
 						"post": "top-right",
 						"station": "environment"
+					},
+					{
+						"fill": "aether-chat",
+						"post": "bottom-right"
 					}
 				]
 			}

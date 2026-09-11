@@ -120,7 +120,7 @@
 			"pluginId": "build",
 			"title": "Build",
 			"description": "Build - the assembled workspace. The Code space rebuilt entirely from marketplace packs: rail, thread, composer, start surface, dock, environment and switcher are all replaceable parts. Install it beside Code and swap any one of them without touching the app.",
-			"version": "0.1.1",
+			"version": "0.1.2",
 			"author": {
 				"name": "Dimension"
 			},
@@ -134,7 +134,7 @@
 				"build"
 			],
 			"requires": {
-				"dimension": ">=0.9.89"
+				"dimension": ">=0.10.4"
 			},
 			"spaces": [
 				{
@@ -159,7 +159,8 @@
 						"board",
 						"analytics",
 						"workbench",
-						"session-tools"
+						"session-tools",
+						"aether-chat"
 					]
 				}
 			]
