@@ -1,54 +1,51 @@
 {
-	"plugin": "build",
+	"plugin": "bots",
 	"contractVersion": 1,
-	"title": "Build",
+	"title": "Bots",
 	"type": "layout",
 	"requires": {
 		"dimension": ">=0.10.4"
 	},
 	"slots": [
 		{
-			"id": "ca-switcher",
+			"id": "bots-switcher",
 			"contract": "switcher"
 		},
 		{
-			"id": "ca-rail",
+			"id": "bots-rail",
 			"contract": "rail",
 			"items": "sessions"
 		},
 		{
-			"id": "ca-workspace",
+			"id": "bots-workspace",
 			"contract": "workspace"
 		},
 		{
-			"id": "ca-dock",
+			"id": "bots-dock",
 			"contract": "dock"
 		}
 	],
 	"spaces": [
 		{
 			"specVersion": 1,
-			"id": "build",
-			"label": "Build",
-			"icon": "hammer",
-			"order": 31,
-			"description": "The assembled workspace — the Code space rebuilt entirely from marketplace packs: rail, thread, composer, start surface, dock, environment and switcher are all replaceable parts.",
+			"id": "bots",
+			"label": "Bots",
+			"icon": "bot",
+			"order": 32,
+			"description": "One General Agent, one chat. The same general-chat pack seated twice — a docked window bound to the coding agent, and the Aether bubble — because the pack is generic and each placement names its agent (doc 72 §4).",
 			"preview": {
-				"screenshots": [
-					"assets/preview/start.webp",
-					"assets/preview/session.webp"
-				],
-				"tagline": "Every part of this workspace is a pack you can swap."
+				"screenshots": ["assets/preview/session.webp"],
+				"tagline": "One agent, one chat — the same pack, placed per agent."
 			},
 			"mark": {
-				"accent": "#f59e0b"
+				"accent": "#38bdf8"
 			},
-			"layout": "build",
+			"layout": "bots",
 			"components": {
-				"ca-switcher": "classic-switcher",
-				"ca-rail": "independent-rail",
-				"ca-workspace": "classic-workspace",
-				"ca-dock": "classic-dock"
+				"bots-switcher": "classic-switcher",
+				"bots-rail": "independent-rail",
+				"bots-workspace": "classic-workspace",
+				"bots-dock": "classic-dock"
 			},
 			"rail": {
 				"actions": [
@@ -65,37 +62,21 @@
 						"label": "Models",
 						"icon": "bot",
 						"target": "models"
-					},
-					{
-						"id": "plugins",
-						"label": "Capabilities",
-						"icon": "box",
-						"target": "plugins"
 					}
 				]
 			},
 			"workspace": {
-				"surfaces": [
-					"session",
-					"autonomy",
-					"models"
-				],
+				"surfaces": ["session", "models"],
 				"start": "session",
 				"session": "session",
-				"actions": [
-					"jobs",
-					"refresh",
-					"environment",
-					"dock",
-					"sound"
-				],
+				"actions": ["refresh", "dock"],
 				"sections": {
 					"thread": "independent-thread",
 					"composer": "independent-composer",
 					"start": "classic-start"
 				},
 				"startCopy": {
-					"heading": "What are we building in {workspace}?"
+					"heading": "Which bot do you want to talk to?"
 				}
 			},
 			"generalAgents": {
@@ -111,7 +92,6 @@
 					"independent-thread",
 					"independent-composer",
 					"classic-start",
-					"classic-environment",
 					"board",
 					"analytics",
 					"workbench",
@@ -122,9 +102,10 @@
 			"widgets": {
 				"pinned": [
 					{
-						"fill": "classic-environment",
-						"post": "top-right",
-						"station": "environment"
+						"fill": "general-chat",
+						"post": "top-left",
+						"agent": "coding",
+						"options": { "chrome": "docked", "width": "360", "height": "480" }
 					},
 					{
 						"fill": "general-chat",

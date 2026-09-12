@@ -1,0 +1,17 @@
+{
+	"name": "@dimension/bots",
+	"author": "Dimension",
+	"version": "0.1.0",
+	"description": "Bots - one General Agent, one chat. The same general-chat pack placed twice: a docked window bound to the coding agent, and the Aether bubble.",
+	"type": "module",
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+	"private": true,
+	"dimension": {
+		"name": "bots",
+		"description": "Bots - one General Agent, one chat. A space assembled from the Build parts that seats the general-chat pack twice: a docked window bound to the coding agent and the floating Aether bubble. The pack is generic; each placement names its agent.",
+		"defaultEnabled": false,
+		"category": "layout",
+		"keywords": ["layout", "space", "bots", "agents", "chat"]
+	}
+}
