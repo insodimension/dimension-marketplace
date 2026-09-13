@@ -135,7 +135,7 @@
 				"chat"
 			],
 			"requires": {
-				"dimension": ">=0.10.4"
+				"dimension": ">=0.10.5"
 			},
 			"spaces": [
 				{
@@ -184,7 +184,7 @@
 				"build"
 			],
 			"requires": {
-				"dimension": ">=0.10.4"
+				"dimension": ">=0.10.5"
 			},
 			"spaces": [
 				{
