@@ -3823,7 +3823,6 @@ interface WorkspaceSurfaceHostProps {
     readonly onSessionPopout?: (sessionRef: SessionRef, title?: string, workspace?: WorkspaceRef) => void | Promise<void>;
     readonly onWorkspaceSelect?: (workspace: WorkspaceRef) => void;
     readonly onAddProject?: () => void;
-    readonly onBranchSelect?: (branch: string) => void;
     /** When set, the workspace stage renders the Loops home instead of the start surface /
      *  thread (the ∞ Loops rail action, mounted in-pane rather than as a full-screen overlay). */
     readonly loopsActive?: boolean;
@@ -3988,7 +3987,6 @@ interface FraymFrameWorkspaceProps {
     readonly onSessionPopout?: (sessionRef: SessionRef, title?: string, workspace?: WorkspaceRef) => void | Promise<void>;
     readonly onWorkspaceSelect?: (workspace: WorkspaceRef) => void;
     readonly onAddProject?: () => void;
-    readonly onBranchSelect?: (branch: string) => void;
     readonly onNewWorktree?: () => void;
     readonly onMoveToWorktree?: (sessionRef: SessionRef) => void;
     readonly loopsActive?: boolean;
