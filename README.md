@@ -94,17 +94,17 @@ A pack that needs a platform capability declares the minimum Dimension it runs
 on, top-level in its `dimension.plugin.json`:
 
 ```json
-{ "plugin": "build", "requires": { "dimension": ">=0.9.89" } }
+{ "plugin": "build", "requires": { "dimension": ">=0.10.5" } }
 ```
 
 The generator lifts it into the pack's catalog entry, so the Store can say
-"Requires Dimension ≥ 0.9.89 — update Dimension" on a card **before** anything is
+"Requires Dimension ≥ 0.10.5 — update Dimension" on a card **before** anything is
 downloaded, and the engine refuses install/load when the host is older. The value
 is any semver range; it is matched against the Dimension PRODUCT version by the
 engine and the plugin manager (`Bun.semver.satisfies`) — never by the UI. A host
 whose version is unknown is never gated. Omit the field when your pack has no
-floor; `packs/build` is the worked example (it needs the specVersion-2 rail
-channel, which ships in 0.9.89+).
+floor; `packs/build` is the worked example (it pins the bundled `general-chat`
+companion, which first ships in Dimension 0.10.5).
 
 ## Status and honesty
 

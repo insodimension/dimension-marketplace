@@ -115,12 +115,62 @@
 			]
 		},
 		{
+			"name": "bots",
+			"source": "./packs/bots",
+			"pluginId": "bots",
+			"title": "Bots",
+			"description": "Bots - one General Agent, one chat. A space assembled from the Build parts that seats the general-chat pack twice: a docked window bound to the coding agent and the floating Aether bubble. The pack is generic; each placement names its agent.",
+			"version": "0.1.0",
+			"author": {
+				"name": "Dimension"
+			},
+			"repository": "https://github.com/insodimension/dimension-marketplace",
+			"license": "MIT",
+			"category": "layout",
+			"tags": [
+				"layout",
+				"space",
+				"bots",
+				"agents",
+				"chat"
+			],
+			"requires": {
+				"dimension": ">=0.10.5"
+			},
+			"spaces": [
+				{
+					"id": "bots",
+					"label": "Bots",
+					"tagline": "One agent, one chat — the same pack, placed per agent.",
+					"screenshots": [
+						"packs/bots/assets/preview/session.webp"
+					],
+					"icon": "bot",
+					"accent": "#38bdf8",
+					"requires": [
+						"classic-switcher",
+						"independent-rail",
+						"classic-workspace",
+						"classic-dock",
+						"independent-thread",
+						"independent-composer",
+						"classic-start",
+						"board",
+						"analytics",
+						"workbench",
+						"session-tools",
+						"general-chat"
+					]
+				}
+			]
+		},
+		{
 			"name": "build",
 			"source": "./packs/build",
 			"pluginId": "build",
 			"title": "Build",
 			"description": "Build - the assembled workspace. The Code space rebuilt entirely from marketplace packs: rail, thread, composer, start surface, dock, environment and switcher are all replaceable parts. Install it beside Code and swap any one of them without touching the app.",
-			"version": "0.1.1",
+			"version": "0.1.2",
 			"author": {
 				"name": "Dimension"
 			},
@@ -134,7 +184,7 @@
 				"build"
 			],
 			"requires": {
-				"dimension": ">=0.9.89"
+				"dimension": ">=0.10.5"
 			},
 			"spaces": [
 				{
@@ -159,7 +209,8 @@
 						"board",
 						"analytics",
 						"workbench",
-						"session-tools"
+						"session-tools",
+						"general-chat"
 					]
 				}
 			]
